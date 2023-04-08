@@ -10,6 +10,7 @@ interface IProps {
   handleModelChange: (e: any) => void;
   handleDrop: (e: any) => void;
   outputHandler: () => Promise<void>;
+  bgRemoveHandler: () => Promise<void>;
   upscaylHandler: () => Promise<void>;
   batchMode: boolean;
   setBatchMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -38,6 +39,7 @@ function LeftPaneImageSteps({
   handleModelChange,
   handleDrop,
   outputHandler,
+  bgRemoveHandler,
   upscaylHandler,
   batchMode,
   setBatchMode,
@@ -211,22 +213,9 @@ function LeftPaneImageSteps({
       {/* STEP 3 */}
       <div className="animate-step-in">
         <p className="step-heading">Step 3</p>
-        {dimensions.width && dimensions.height && (
-          <p className="mb-2 text-sm">
-            Upscale from{" "}
-            <span className="font-bold">
-              {dimensions.width}x{dimensions.height}
-            </span>{" "}
-            to{" "}
-            <span className="font-bold">
-              {doubleUpscayl ? dimensions.width * 16 : dimensions.width * 4}x
-              {doubleUpscayl ? dimensions.height * 16 : dimensions.height * 4}
-            </span>
-          </p>
-        )}
         <button
           className="btn-accent btn"
-          onClick={upscaylHandler}
+          onClick={bgRemoveHandler}
           disabled={progress.length > 0}>
           {progress.length > 0 ? "REMOVING⏳" : "REMOVE BACKGROUND"}
         </button>

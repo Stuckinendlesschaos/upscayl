@@ -346,6 +346,11 @@ const Home = () => {
     }
   };
 
+  //TODO: invoke the events 
+  const bgRemoveHandler = async () => {
+
+  };
+
   const upscaylHandler = async () => {
     if (isVideo) {
       setUpscaledVideoPath("");
@@ -456,6 +461,7 @@ const Home = () => {
             handleModelChange={handleModelChange}
             handleDrop={handleDrop}
             outputHandler={outputHandler}
+            bgRemoveHandler={bgRemoveHandler}
             upscaylHandler={upscaylHandler}
             batchMode={batchMode}
             setBatchMode={setBatchMode}
@@ -483,6 +489,7 @@ const Home = () => {
             handleModelChange={handleModelChange}
             handleDrop={handleDrop}
             outputHandler={outputHandler}
+            bgRemoveHandler={bgRemoveHandler}
             upscaylHandler={upscaylHandler}
             batchMode={batchMode}
             setBatchMode={setBatchMode}

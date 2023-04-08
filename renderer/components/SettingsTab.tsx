@@ -11,6 +11,7 @@ interface IProps {
   handleModelChange: (e: any) => void;
   handleDrop: (e: any) => void;
   outputHandler: () => Promise<void>;
+  bgRemoveHandler: () => Promise<void>;
   upscaylHandler: () => Promise<void>;
   batchMode: boolean;
   setBatchMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,6 +41,7 @@ function SettingsTab({
   handleModelChange,
   handleDrop,
   outputHandler,
+  bgRemoveHandler,
   upscaylHandler,
   batchMode,
   setBatchMode,
