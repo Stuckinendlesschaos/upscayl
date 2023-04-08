@@ -33,12 +33,12 @@ electron_log_1.default.initialize({ preload: true });
 let mainWindow;
 electron_1.app.on("ready", () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, electron_next_1.default)("./renderer");
-    electron_log_1.default.info("🚀 ICON PATH: ", (0, path_1.join)(__dirname, "build", "icon.png"));
+    electron_log_1.default.info("🚀 ICON PATH: ", (0, path_1.join)(__dirname, "build", "icon-purple.png"));
     electron_log_1.default.info("🚀 UPSCAYL EXEC PATH: ", (0, binaries_1.execPath)(""));
     electron_log_1.default.info("🚀 MODELS PATH: ", binaries_1.modelsPath);
     electron_log_1.default.info("🚀 FFMPEG PATH: ", upscayl_ffmpeg_1.default.path);
     mainWindow = new electron_1.BrowserWindow({
-        icon: (0, path_1.join)(__dirname, "build", "icon.png"),
+        icon: (0, path_1.join)(__dirname, "build", "icon-purple.png"),
         width: 1300,
         height: 940,
         minHeight: 500,

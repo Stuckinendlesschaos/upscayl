@@ -10,25 +10,7 @@ function Footer() {
           href="https://github.com/upscayl/upscayl"
           target="_blank"
         >
-          Upscayl
-        </a>
-      </p>
-      <p>
-        By{" "}
-        <a
-          href="https://github.com/TGS963"
-          className="font-bold"
-          target="_blank"
-        >
-          TGS963
-        </a>{" "}
-        and{" "}
-        <a
-          href="https://github.com/NayamAmarshe"
-          className="font-bold"
-          target="_blank"
-        >
-          Nayam Amarshe
+          Image Assistant
         </a>
       </p>
     </div>

@@ -42,7 +42,7 @@
         },
         {
           "type": "file",
-          "path": "../main/build/icon.png"
+          "path": "../main/build/icon-purple.png"
         },
         {
           "type": "script",
@@ -55,7 +55,7 @@
         "unzip upscayl -d /app/upscayl",
         "install upscayl-wrapper /app/bin/",
         "install -d /app/share/icons/hicolor/512x512/apps/",
-        "install icon.png /app/share/icons/hicolor/512x512/apps/org.upscayl.app.png",
+        "install icon-purple.png /app/share/icons/hicolor/512x512/apps/org.upscayl.app.png",
         "install -d /app/share/applications",
         "touch org.upscayl.app.desktop",
         "install -Dp -m644 org.upscayl.app.metainfo.xml /app/share/metainfo/org.upscayl.app.metainfo.xml",

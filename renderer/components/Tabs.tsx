@@ -13,7 +13,7 @@ const Tabs = ({ selectedTab, setSelectedTab }: TabsProps) => {
         onClick={() => {
           setSelectedTab(0);
         }}>
-        Upscayl
+        Create
       </a>
       <a
         className={`tab ${selectedTab === 1 && "tab-active"}`}

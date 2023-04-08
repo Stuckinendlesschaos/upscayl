@@ -123,7 +123,7 @@
       "target": [
         "nsis"
       ],
-      "icon": "main/build/icon.png"
+      "icon": "main/build/icon-purple.png"
     },
     "nsis": {
       "allowToChangeInstallationDirectory": true,

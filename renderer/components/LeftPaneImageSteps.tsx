@@ -183,7 +183,7 @@ function LeftPaneImageSteps({
         <p
           className="mr-1 inline-block  cursor-help text-sm"
           data-tip="This will let you upscale all files in a folder at once">
-          Batch Upscale
+          Batch
         </p>
       </div>
 
@@ -198,8 +198,43 @@ function LeftPaneImageSteps({
       </div>
 
       {/* STEP 2 */}
-      <div className="animate-step-in">
+      <div className="animate-step-in" data-tip={outputPath}>
         <p className="step-heading">Step 2</p>
+        <p className="mb-2 text-sm">
+          Defaults to {!batchMode ? "Image's" : "Folder's"} path
+        </p>
+        <button className="btn-primary btn" onClick={outputHandler}>
+          Set Output Folder
+        </button>
+      </div>
+
+      {/* STEP 3 */}
+      <div className="animate-step-in">
+        <p className="step-heading">Step 3</p>
+        {dimensions.width && dimensions.height && (
+          <p className="mb-2 text-sm">
+            Upscale from{" "}
+            <span className="font-bold">
+              {dimensions.width}x{dimensions.height}
+            </span>{" "}
+            to{" "}
+            <span className="font-bold">
+              {doubleUpscayl ? dimensions.width * 16 : dimensions.width * 4}x
+              {doubleUpscayl ? dimensions.height * 16 : dimensions.height * 4}
+            </span>
+          </p>
+        )}
+        <button
+          className="btn-accent btn"
+          onClick={upscaylHandler}
+          disabled={progress.length > 0}>
+          {progress.length > 0 ? "REMOVING⏳" : "REMOVE BACKGROUND"}
+        </button>
+      </div>
+
+      {/* STEP 4 */}
+      <div className="animate-step-in">
+        <p className="step-heading">Step 4</p>
         <p className="mb-2 text-sm">Select Upscaling Type</p>
 
         <Select
@@ -247,20 +282,9 @@ function LeftPaneImageSteps({
         )}
       </div>
 
-      {/* STEP 3 */}
-      <div className="animate-step-in" data-tip={outputPath}>
-        <p className="step-heading">Step 3</p>
-        <p className="mb-2 text-sm">
-          Defaults to {!batchMode ? "Image's" : "Folder's"} path
-        </p>
-        <button className="btn-primary btn" onClick={outputHandler}>
-          Set Output Folder
-        </button>
-      </div>
-
-      {/* STEP 4 */}
+      {/* STEP 5 */}
       <div className="animate-step-in">
-        <p className="step-heading">Step 4</p>
+        <p className="step-heading">Step 5</p>
         {dimensions.width && dimensions.height && (
           <p className="mb-2 text-sm">
             Upscale from{" "}

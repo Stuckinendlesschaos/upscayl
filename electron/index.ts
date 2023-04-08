@@ -39,13 +39,13 @@ let mainWindow;
 app.on("ready", async () => {
   await prepareNext("./renderer");
 
-  log.info("🚀 ICON PATH: ", join(__dirname, "build", "icon.png"));
+  log.info("🚀 ICON PATH: ", join(__dirname, "build", "icon-purple.png"));
   log.info("🚀 UPSCAYL EXEC PATH: ", execPath(""));
   log.info("🚀 MODELS PATH: ", modelsPath);
   log.info("🚀 FFMPEG PATH: ", ffmpeg.path);
 
   mainWindow = new BrowserWindow({
-    icon: join(__dirname, "build", "icon.png"),
+    icon: join(__dirname, "build", "icon-purple.png"),
     width: 1300,
     height: 940,
     minHeight: 500,
