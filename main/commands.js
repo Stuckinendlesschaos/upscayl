@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const commands = {
     SELECT_FILE: "Select a File",
     SELECT_FOLDER: "Select a Folder",
+    REMOVE_BACKGROUND: "Remove the Images' Background",
     UPSCAYL: "Upscale the Image",
     UPSCAYL_DONE: "Upscaling Done",
     UPSCAYL_PROGRESS: "Send Progress from Main to Renderer",

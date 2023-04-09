@@ -241,6 +241,12 @@ ipcMain.on(commands.DOUBLE_UPSCAYL, async (event, payload) => {
   });
 });
 
+//------------------------Remove Background-----------------------------//
+ipcMain.on(commands.REMOVE_BACKGROUND, async (event, payload) => {
+
+});
+
+
 //------------------------Image Upscayl-----------------------------//
 ipcMain.on(commands.UPSCAYL, async (event, payload) => {
   const model = payload.model as string;

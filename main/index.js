@@ -192,6 +192,9 @@ electron_1.ipcMain.on(commands_1.default.DOUBLE_UPSCAYL, (event, payload) => __a
         }
     });
 }));
+//------------------------Remove Background-----------------------------//
+electron_1.ipcMain.on(commands_1.default.REMOVE_BACKGROUND, (event, payload) => __awaiter(void 0, void 0, void 0, function* () {
+}));
 //------------------------Image Upscayl-----------------------------//
 electron_1.ipcMain.on(commands_1.default.UPSCAYL, (event, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const model = payload.model;
