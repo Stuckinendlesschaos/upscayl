@@ -7,7 +7,6 @@ function Footer() {
         Copyright © 2022 -{" "}
         <a
           className="font-bold"
-          href="https://github.com/upscayl/upscayl"
           target="_blank"
         >
           Image Assistant

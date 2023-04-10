@@ -3,13 +3,13 @@ import React from "react";
 function RightPaneInfo({ version, batchMode, isVideo }) {
   return isVideo ? (
     <>
-      <p className="p-5 pb-1 text-lg font-semibold">Select Video to Upscale</p>
-      <p className="text-sm">Upscayl v{version}</p>
+      <p className="p-5 pb-1 text-lg font-semibold">Select Video to Handle</p>
+      <p className="text-sm">Image-Assistant v{version}</p>
     </>
   ) : (
     <>
       <p className="p-5 pb-1 text-lg font-semibold">
-        Select {batchMode ? "a Folder" : "an Image"} to Upscale
+        Select {batchMode ? "a Folder" : "an Image"} to Handle
       </p>
       {batchMode && (
         <p className="w-full pb-5 text-center md:w-96">
@@ -17,7 +17,7 @@ function RightPaneInfo({ version, batchMode, isVideo }) {
           JPEG & WEBP images.
         </p>
       )}
-      <p className="text-sm">Upscayl v{version}</p>
+      <p className="text-sm">Image-Assistant v{version}</p>
     </>
   );
 }
