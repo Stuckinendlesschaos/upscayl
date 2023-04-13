@@ -11,11 +11,13 @@ import Tabs from "../components/Tabs";
 import SettingsTab from "../components/SettingsTab";
 import { useAtom } from "jotai";
 import { logAtom } from "../atoms/logAtom";
+import { Console } from "console";
 
 const Home = () => {
   // STATES
   const [imagePath, SetImagePath] = useState("");
   const [upscaledImagePath, setUpscaledImagePath] = useState("");
+  const [RemovebgOfImagePath,setRemovebgOfImagePath]= useState("");            
   const [outputPath, setOutputPath] = useState("");
   const [scaleFactor, setScaleFactor] = useState(4);
   const [progress, setProgress] = useState("");
@@ -29,6 +31,7 @@ const Home = () => {
   const [isVideo, setIsVideo] = useState(false);
   const [videoPath, setVideoPath] = useState("");
   const [upscaledVideoPath, setUpscaledVideoPath] = useState("");
+  const [RemovebgOfVideoPath,setRemovebgOfVideoPath]= useState("");
   const [doubleUpscaylCounter, setDoubleUpscaylCounter] = useState(0);
   const [gpuId, setGpuId] = useState("");
   const [saveImageAs, setSaveImageAs] = useState("png");
@@ -83,6 +86,13 @@ const Home = () => {
         resetImagePaths();
       }
     };
+
+    // BACKGROUND REMOVING DONE
+    window.electron.on(commands.REMMOVEBG_DONE, (_, data: string) => {
+      setProgress("");
+      setRemovebgOfImagePath(data);
+      addToLog(data);
+    });
 
     // UPSCAYL PROGRESS
     window.electron.on(commands.UPSCAYL_PROGRESS, (_, data: string) => {
@@ -249,7 +259,7 @@ const Home = () => {
 
     if (path !== "cancelled") {
       setBatchFolderPath(path);
-      setOutputPath(path + "_upscayled");
+      setOutputPath(path + "Plus");
     }
   };
 
@@ -348,7 +358,31 @@ const Home = () => {
 
   //TODO: invoke the events 
   const bgRemoveHandler = async () => {
+    if (isVideo) {
+      setRemovebgOfVideoPath("");
+    } else {
+      setRemovebgOfImagePath("");
+    }
 
+    if (!isVideo && (imagePath !== "" || batchFolderPath !== "")) {
+      setProgress("Hold on...");
+      //在处理过程中传递的逻辑
+      if(batchMode){
+        await window.electron.send(commands.FOLDER_REMOVE_BACKGROUND, {
+          batchFolderPath,
+          outputPath,
+          saveImageAs,
+        });
+      } else{
+        await window.electron.send(commands.REMOVE_BACKGROUND, {
+          imagePath,
+          outputPath,
+          saveImageAs,
+        });
+      }
+    } else{
+      alert(`Please select ${isVideo ? "a video" : "an image"} to rm Bg`);
+    }
   };
 
   const upscaylHandler = async () => {

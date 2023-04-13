@@ -243,7 +243,75 @@ ipcMain.on(commands.DOUBLE_UPSCAYL, async (event, payload) => {
 
 //------------------------Remove Background-----------------------------//
 ipcMain.on(commands.REMOVE_BACKGROUND, async (event, payload) => {
+  //loading the key modules
+  const axios = require('axios')
+  const FormData = require('form-data')
+  const fs = require('fs')
+  
+  const imagePath = payload.imagePath as string;
+  const imgType = imagePath.slice(imagePath.lastIndexOf('.')) as string;
+  const saveImageAs = payload.saveImageAs as string;
+  let inputDir = (payload.imagePath.match(/(.*)[\/\\]/)[1] || "") as string;
+  let outputDir = payload.outputPath as string;
+  
+  // COPY IMAGE TO TMP FOLDER
+  const fullfileName = payload.imagePath.replace(/^.*[\\\/]/, "") as string;
 
+  const fileName = parse(fullfileName).name;
+  log.log("🚀 => fileName", fileName);
+
+  const fileExt = parse(fullfileName).ext;
+  log.log("🚀 => fileExt", fileExt);
+
+  
+  //Single Image Processing...
+  var data = new FormData()
+  data.append('image', fs.createReadStream(imagePath))
+
+  var config = {
+    method: 'post',
+    url: 'https://pixian.ai/api/v1/remove-background',
+    responseType: 'arraybuffer',
+    headers: {
+      Authorization:
+        'Basic cHhkOWlsN2tjeWE1cWZlOmc5bWdxdWhpMjM4OWw3aXQxZzd0anRrNjhzcHB0OHMwam9wNHZ1ZjR0aWh0c3Y0OTc5YWI=',
+      Accept: '*/*',
+      Host: 'pixian.ai',
+      Connection: 'keep-alive',
+      'Content-Type':
+        'multipart/form-data; boundary=--------------------------770839930141001909509711',
+      ...data.getHeaders(),
+    },
+    data: data,
+  }
+
+  const outFile =
+    outputDir +
+    "/" +
+    fileName +
+    "__removeBg" +
+    "." +
+    saveImageAs;
+
+  axios(config)
+    .then((response) => {
+      //Response From Web API 
+      var imgData = Buffer.from(response.data, 'base64') //Buffer编码
+      fs.writeFile(
+        outFile,
+        imgData,
+        (err) => {
+          if (err) {
+            console.log('write file fail')
+          } else {
+            mainWindow.webContents.send(commands.REMMOVEBG_DONE, outFile);
+          }
+        }
+      )
+    })
+    .catch((error) => {
+      console.log('axios error >>>>>> ', error)
+    })
 });
 
 
@@ -299,7 +367,7 @@ ipcMain.on(commands.UPSCAYL, async (event, payload) => {
     let failed = false;
 
     const onData = (data: string) => {
-      log.log("image upscayl: ", data.toString());
+      // log.log("image upscayl: ", data.toString());
       data = data.toString();
       mainWindow.webContents.send(commands.UPSCAYL_PROGRESS, data.toString());
       if (data.includes("invalid gpu") || data.includes("failed")) {

@@ -194,6 +194,53 @@ electron_1.ipcMain.on(commands_1.default.DOUBLE_UPSCAYL, (event, payload) => __a
 }));
 //------------------------Remove Background-----------------------------//
 electron_1.ipcMain.on(commands_1.default.REMOVE_BACKGROUND, (event, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    //loading the key modules
+    const axios = require('axios');
+    const FormData = require('form-data');
+    const fs = require('fs');
+    const imagePath = payload.imagePath;
+    const imgType = imagePath.slice(imagePath.lastIndexOf('.'));
+    const saveImageAs = payload.saveImageAs;
+    let inputDir = (payload.imagePath.match(/(.*)[\/\\]/)[1] || "");
+    let outputDir = payload.outputPath;
+    // COPY IMAGE TO TMP FOLDER
+    const fullfileName = payload.imagePath.replace(/^.*[\\\/]/, "");
+    const fileName = (0, path_1.parse)(fullfileName).name;
+    electron_log_1.default.log("🚀 => fileName", fileName);
+    const fileExt = (0, path_1.parse)(fullfileName).ext;
+    electron_log_1.default.log("🚀 => fileExt", fileExt);
+    //Single Image Processing...
+    var data = new FormData();
+    data.append('image', fs.createReadStream(imagePath));
+    var config = {
+        method: 'post',
+        url: 'https://pixian.ai/api/v1/remove-background',
+        responseType: 'arraybuffer',
+        headers: Object.assign({ Authorization: 'Basic cHhkOWlsN2tjeWE1cWZlOmc5bWdxdWhpMjM4OWw3aXQxZzd0anRrNjhzcHB0OHMwam9wNHZ1ZjR0aWh0c3Y0OTc5YWI=', Accept: '*/*', Host: 'pixian.ai', Connection: 'keep-alive', 'Content-Type': 'multipart/form-data; boundary=--------------------------770839930141001909509711' }, data.getHeaders()),
+        data: data,
+    };
+    const outFile = outputDir +
+        "/" +
+        fileName +
+        "__removeBg" +
+        "." +
+        saveImageAs;
+    axios(config)
+        .then((response) => {
+        //Response From Web API 
+        var imgData = Buffer.from(response.data, 'base64'); //Buffer编码
+        fs.writeFile(outFile, imgData, (err) => {
+            if (err) {
+                console.log('write file fail');
+            }
+            else {
+                mainWindow.webContents.send(commands_1.default.REMMOVEBG_DONE, outFile);
+            }
+        });
+    })
+        .catch((error) => {
+        console.log('axios error >>>>>> ', error);
+    });
 }));
 //------------------------Image Upscayl-----------------------------//
 electron_1.ipcMain.on(commands_1.default.UPSCAYL, (event, payload) => __awaiter(void 0, void 0, void 0, function* () {
@@ -228,7 +275,7 @@ electron_1.ipcMain.on(commands_1.default.UPSCAYL, (event, payload) => __awaiter(
         let isAlpha = false;
         let failed = false;
         const onData = (data) => {
-            electron_log_1.default.log("image upscayl: ", data.toString());
+            // log.log("image upscayl: ", data.toString());
             data = data.toString();
             mainWindow.webContents.send(commands_1.default.UPSCAYL_PROGRESS, data.toString());
             if (data.includes("invalid gpu") || data.includes("failed")) {

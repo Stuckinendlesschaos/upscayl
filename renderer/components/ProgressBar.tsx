@@ -12,7 +12,7 @@ function ProgressBar({ progress, doubleUpscaylCounter }) {
             : `${progress}`}
         </p>
         <p className="rounded-full bg-base-300 px-2 py-1 text-sm font-medium">
-          Doing the Upscayl magic...
+          Doing the Magic...
         </p>
       </div>
     </div>
