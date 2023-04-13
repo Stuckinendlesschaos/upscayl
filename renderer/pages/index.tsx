@@ -17,7 +17,7 @@ const Home = () => {
   // STATES
   const [imagePath, SetImagePath] = useState("");
   const [upscaledImagePath, setUpscaledImagePath] = useState("");
-  const [RemovebgOfImagePath,setRemovebgOfImagePath]= useState("");            
+  const [removebgOfImagePath,setremovebgOfImagePath]= useState("");            
   const [outputPath, setOutputPath] = useState("");
   const [scaleFactor, setScaleFactor] = useState(4);
   const [progress, setProgress] = useState("");
@@ -90,7 +90,7 @@ const Home = () => {
     // BACKGROUND REMOVING DONE
     window.electron.on(commands.REMMOVEBG_DONE, (_, data: string) => {
       setProgress("");
-      setRemovebgOfImagePath(data);
+      setremovebgOfImagePath(data);
       addToLog(data);
     });
 
@@ -134,7 +134,7 @@ const Home = () => {
     });
 
     // UPSCAYL DONE
-    window.electron.on(commands.UPSCAYL_DONE, (_, data: string) => {
+    window.electron.on(commands.UPSCAYL_DONE, (_, data: string) => { 
       setProgress("");
       setUpscaledImagePath(data);
       addToLog(data);
@@ -211,6 +211,7 @@ const Home = () => {
     setProgress("");
 
     SetImagePath("");
+    setremovebgOfImagePath("");
     setUpscaledImagePath("");
 
     setBatchFolderPath("");
@@ -361,7 +362,7 @@ const Home = () => {
     if (isVideo) {
       setRemovebgOfVideoPath("");
     } else {
-      setRemovebgOfImagePath("");
+      setremovebgOfImagePath("");
     }
 
     if (!isVideo && (imagePath !== "" || batchFolderPath !== "")) {
@@ -556,6 +557,7 @@ const Home = () => {
         onDragLeave={(e) => handleDragLeave(e)}
         onPaste={(e) => handlePaste(e)}>
         {progress.length > 0 &&
+        removebgOfImagePath.length === 0 &&
         upscaledImagePath.length === 0 &&
         upscaledBatchFolderPath.length === 0 &&
         upscaledVideoPath.length === 0 ? (
@@ -569,6 +571,7 @@ const Home = () => {
         {((!isVideo &&
           !batchMode &&
           imagePath.length === 0 &&
+          removebgOfImagePath.length === 0 &&
           upscaledImagePath.length === 0) ||
           (!isVideo &&
             batchMode &&
@@ -587,6 +590,7 @@ const Home = () => {
         {/* SHOW SELECTED IMAGE */}
         {!batchMode &&
           !isVideo &&
+          removebgOfImagePath.length === 0 &&
           upscaledImagePath.length === 0 &&
           imagePath.length > 0 && (
             <>
@@ -676,6 +680,60 @@ const Home = () => {
                     <img
                       src={"file://" + upscaledImagePath}
                       alt="Upscayl"
+                      style={{
+                        objectFit: "contain",
+                        backgroundPosition: "0% 0%",
+                        transformOrigin: backgroundPosition,
+                      }}
+                      onMouseMove={handleMouseMove}
+                      className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
+                    />
+                  </>
+                }
+                className="group h-screen"
+              />
+            </>
+          )}
+
+        {/* COMPARISON SLIDER */}
+        {!batchMode &&
+          !isVideo &&
+          imagePath.length > 0 &&
+          removebgOfImagePath.length > 0 && (
+            <>
+              <ImageOptions
+                zoomAmount={zoomAmount}
+                setZoomAmount={setZoomAmount}
+                resetImagePaths={resetImagePaths}
+              />
+              <ReactCompareSlider
+                itemOne={
+                  <>
+                    <p className="absolute bottom-1 left-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
+                      Original
+                    </p>
+
+                    <img
+                      src={"file://" + imagePath}
+                      alt="Original"
+                      onMouseMove={handleMouseMove}
+                      style={{
+                        objectFit: "contain",
+                        backgroundPosition: "0% 0%",
+                        transformOrigin: backgroundPosition,
+                      }}
+                      className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
+                    />
+                  </>
+                }
+                itemTwo={
+                  <>
+                    <p className="absolute bottom-1 right-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
+                      BgRemoved
+                    </p>
+                    <img
+                      src={"file://" + removebgOfImagePath}
+                      alt="BgRemoved"
                       style={{
                         objectFit: "contain",
                         backgroundPosition: "0% 0%",
