@@ -699,7 +699,8 @@ const Home = () => {
         {!batchMode &&
           !isVideo &&
           imagePath.length > 0 &&
-          removebgOfImagePath.length > 0 && (
+          removebgOfImagePath.length > 0 &&
+          upscaledImagePath.length === 0 && (
             <>
               <ImageOptions
                 zoomAmount={zoomAmount}

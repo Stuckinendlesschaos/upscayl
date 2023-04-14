@@ -42,5 +42,4 @@ build-dir/
 #vscode
 .vscode/
 
-main/*.js
-main/utils
+main/*
