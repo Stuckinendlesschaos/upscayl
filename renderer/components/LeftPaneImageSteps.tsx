@@ -216,8 +216,8 @@ function LeftPaneImageSteps({
         <button
           className="btn-accent btn"
           onClick={bgRemoveHandler}
-          disabled={progress.length > 0}>
-          {progress.length > 0 ? "REMOVING⏳" : "REMOVE BACKGROUND"}
+          disabled={progress.length === 20}>
+          {progress.length === 20 ? "REMOVING⏳" : "REMOVE BACKGROUND"}
         </button>
       </div>
 
@@ -290,8 +290,8 @@ function LeftPaneImageSteps({
         <button
           className="btn-accent btn"
           onClick={upscaylHandler}
-          disabled={progress.length > 0}>
-          {progress.length > 0 ? "Upscayling⏳" : "Upscayl"}
+          disabled={progress.length === 10}>
+          {progress.length === 10 ? "Upscayling⏳" : "Upscayl"}
         </button>
       </div>
 

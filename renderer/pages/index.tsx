@@ -366,7 +366,7 @@ const Home = () => {
     }
 
     if (!isVideo && (imagePath !== "" || batchFolderPath !== "")) {
-      setProgress("Hold on...");
+      setProgress("Waiting a minute....");
       //在处理过程中传递的逻辑
       if(batchMode){
         await window.electron.send(commands.FOLDER_REMOVE_BACKGROUND, {
