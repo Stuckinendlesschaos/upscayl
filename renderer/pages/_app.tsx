@@ -10,7 +10,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head>
-        <title>Upscayl</title>
+        <title>Image Assistant</title>
       </Head>
       <Provider>
         <Component {...pageProps} data-theme="dark" />
