@@ -660,7 +660,10 @@ const Home = () => {
                     </p>
 
                     <img
-                      src={"file://" + imagePath}
+                      src={
+                        "file://" + 
+                        `${removebgOfImagePath ? removebgOfImagePath : imagePath}`
+                      }
                       alt="Original"
                       onMouseMove={handleMouseMove}
                       style={{
