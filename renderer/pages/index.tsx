@@ -397,7 +397,7 @@ const Home = () => {
 
       if (doubleUpscayl) {
         await window.electron.send(commands.DOUBLE_UPSCAYL, {
-          imagePath: removebgOfImagePath.length > 0 ? removebgOfImagePath: imagePath,
+          imagePath: removebgOfImagePath.length > 0 ? removebgOfImagePath : imagePath,
           outputPath,
           model,
           gpuId: gpuId.length === 0 ? null : gpuId,
@@ -416,7 +416,7 @@ const Home = () => {
       } else {
         await window.electron.send(commands.UPSCAYL, {
           scaleFactor,
-          imagePath: removebgOfImagePath.length > 0 ? removebgOfImagePath: imagePath,
+          imagePath: removebgOfImagePath.length > 0 ? removebgOfImagePath : imagePath,
           outputPath,
           model,
           gpuId: gpuId.length === 0 ? null : gpuId,
@@ -556,7 +556,6 @@ const Home = () => {
         onDragLeave={(e) => handleDragLeave(e)}
         onPaste={(e) => handlePaste(e)}>
         {progress.length > 0 &&
-        removebgOfImagePath.length === 0 &&
         upscaledImagePath.length === 0 &&
         upscaledBatchFolderPath.length === 0 &&
         upscaledVideoPath.length === 0 ? (
