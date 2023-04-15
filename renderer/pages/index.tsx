@@ -398,7 +398,7 @@ const Home = () => {
 
       if (doubleUpscayl) {
         await window.electron.send(commands.DOUBLE_UPSCAYL, {
-          imagePath,
+          imagePath: removebgOfImagePath.length > 0 ? removebgOfImagePath: imagePath,
           outputPath,
           model,
           gpuId: gpuId.length === 0 ? null : gpuId,
@@ -417,7 +417,7 @@ const Home = () => {
       } else {
         await window.electron.send(commands.UPSCAYL, {
           scaleFactor,
-          imagePath,
+          imagePath: removebgOfImagePath.length > 0 ? removebgOfImagePath: imagePath,
           outputPath,
           model,
           gpuId: gpuId.length === 0 ? null : gpuId,
