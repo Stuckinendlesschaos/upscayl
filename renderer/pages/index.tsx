@@ -11,7 +11,6 @@ import Tabs from "../components/Tabs";
 import SettingsTab from "../components/SettingsTab";
 import { useAtom } from "jotai";
 import { logAtom } from "../atoms/logAtom";
-import { Console } from "console";
 
 const Home = () => {
   // STATES
