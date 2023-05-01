@@ -16,7 +16,7 @@ const Home = () => {
   // STATES
   const [imagePath, SetImagePath] = useState("");
   const [upscaledImagePath, setUpscaledImagePath] = useState("");
-  const [removebgOfImagePath,setremovebgOfImagePath]= useState("");            
+  const [removebgOfImagePath,setremovebgOfImagePath]= useState("");                     
   const [outputPath, setOutputPath] = useState("");
   const [scaleFactor, setScaleFactor] = useState(4);
   const [progress, setProgress] = useState("");
@@ -25,6 +25,7 @@ const Home = () => {
   const [version, setVersion] = useState("");
   const [batchMode, setBatchMode] = useState(false);
   const [batchFolderPath, setBatchFolderPath] = useState("");
+  const [rmbgBatchFolderPath, setRmbgBatchFolderPath] = useState("");
   const [upscaledBatchFolderPath, setUpscaledBatchFolderPath] = useState("");
   const [doubleUpscayl, setDoubleUpscayl] = useState(false);
   const [isVideo, setIsVideo] = useState(false);
@@ -90,6 +91,14 @@ const Home = () => {
     window.electron.on(commands.REMMOVEBG_DONE, (_, data: string) => {
       setProgress("");
       setremovebgOfImagePath(data);
+      addToLog(data);
+    });
+
+    // 批处理背景移除并且下载完成 重新指定文件目录（移除背景后的rmbg目录）
+    window.electron.on(commands.REMMOVEBATCHBG_DONE, (_, data: string) => {
+      setProgress("");
+      setBatchFolderPath(data)
+      setOutputPath(data + "Plus");
       addToLog(data);
     });
 
@@ -368,6 +377,8 @@ const Home = () => {
       setProgress("Waiting a minute....");
       //在处理过程中传递的逻辑
       if(batchMode){
+        console.log("batchFolderPath ", batchFolderPath);
+        console.log("commands.FOLDER_REMOVE_BACKGROUND = ", commands.FOLDER_REMOVE_BACKGROUND);
         await window.electron.send(commands.FOLDER_REMOVE_BACKGROUND, {
           batchFolderPath,
           outputPath,

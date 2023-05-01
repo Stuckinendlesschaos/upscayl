@@ -7,6 +7,7 @@ const commands = {
     UPSCAYL: "Upscale the Image",
     UPSCAYL_DONE: "Upscaling Done",
     REMMOVEBG_DONE: "Remove BackGround Done",
+    REMMOVEBATCHBG_DONE: "Remove Batch BackGround Done",
     UPSCAYL_PROGRESS: "Send Progress from Main to Renderer",
     DOUBLE_UPSCAYL: "Double Upscale the Image",
     DOUBLE_UPSCAYL_DONE: "Double Upscaling Done",

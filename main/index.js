@@ -22,6 +22,7 @@ const electron_log_1 = __importDefault(require("electron-log"));
 const url_1 = require("url");
 const fs_1 = __importDefault(require("fs"));
 const binaries_1 = require("./binaries");
+const file_1 = require("./utils/file");
 // Packages
 const electron_1 = require("electron");
 const upscayl_1 = require("./upscayl");
@@ -71,11 +72,13 @@ electron_1.app.on("ready", () => __awaiter(void 0, void 0, void 0, function* () 
     if (!electron_is_dev_1.default) {
         electron_updater_1.autoUpdater.checkForUpdates();
     }
-    // mainWindow.webContents.openDevTools()
+    else {
+        mainWindow.webContents.openDevTools();
+    }
 }));
 // Quit the app once all windows are closed
 electron_1.app.on("window-all-closed", electron_1.app.quit);
-electron_log_1.default.log(electron_1.app.getAppPath());
+electron_log_1.default.log('electron ', electron_1.app.getAppPath());
 //------------------------Select File-----------------------------//
 // ! DONT FORGET TO RESTART THE APP WHEN YOU CHANGE CODE HERE
 electron_1.ipcMain.handle(commands_1.default.SELECT_FILE, () => __awaiter(void 0, void 0, void 0, function* () {
@@ -193,56 +196,6 @@ electron_1.ipcMain.on(commands_1.default.DOUBLE_UPSCAYL, (event, payload) => __a
         }
     });
 }));
-//------------------------Remove Background-----------------------------//
-electron_1.ipcMain.on(commands_1.default.REMOVE_BACKGROUND, (event, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    //loading the key modules
-    const axios = require('axios');
-    const FormData = require('form-data');
-    const fs = require('fs');
-    const imagePath = payload.imagePath;
-    const imgType = imagePath.slice(imagePath.lastIndexOf('.'));
-    const saveImageAs = payload.saveImageAs;
-    let inputDir = (payload.imagePath.match(/(.*)[\/\\]/)[1] || "");
-    let outputDir = payload.outputPath;
-    // COPY IMAGE TO TMP FOLDER
-    const fullfileName = payload.imagePath.replace(/^.*[\\\/]/, "");
-    const fileName = (0, path_1.parse)(fullfileName).name;
-    electron_log_1.default.log("🚀 => fileName", fileName);
-    const fileExt = (0, path_1.parse)(fullfileName).ext;
-    electron_log_1.default.log("🚀 => fileExt", fileExt);
-    //Single Image Processing...
-    var data = new FormData();
-    data.append('image', fs.createReadStream(imagePath));
-    var config = {
-        method: 'post',
-        url: 'https://pixian.ai/api/v1/remove-background',
-        responseType: 'arraybuffer',
-        headers: Object.assign({ Authorization: 'Basic cHhkOWlsN2tjeWE1cWZlOmc5bWdxdWhpMjM4OWw3aXQxZzd0anRrNjhzcHB0OHMwam9wNHZ1ZjR0aWh0c3Y0OTc5YWI=', Accept: '*/*', Host: 'pixian.ai', Connection: 'keep-alive', 'Content-Type': 'multipart/form-data; boundary=--------------------------770839930141001909509711' }, data.getHeaders()),
-        data: data,
-    };
-    const outFile = outputDir +
-        "/" +
-        fileName +
-        "__removeBg" +
-        "." +
-        saveImageAs;
-    axios(config)
-        .then((response) => {
-        //Response From Web API 
-        var imgData = Buffer.from(response.data, 'base64'); //Buffer编码
-        fs.writeFile(outFile, imgData, (err) => {
-            if (err) {
-                console.log('write file fail');
-            }
-            else {
-                mainWindow.webContents.send(commands_1.default.REMMOVEBG_DONE, outFile);
-            }
-        });
-    })
-        .catch((error) => {
-        console.log('axios error >>>>>> ', error);
-    });
-}));
 //------------------------Image Upscayl-----------------------------//
 electron_1.ipcMain.on(commands_1.default.UPSCAYL, (event, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const model = payload.model;
@@ -254,9 +207,9 @@ electron_1.ipcMain.on(commands_1.default.UPSCAYL, (event, payload) => __awaiter(
     // COPY IMAGE TO TMP FOLDER
     const fullfileName = payload.imagePath.replace(/^.*[\\\/]/, "");
     const fileName = (0, path_1.parse)(fullfileName).name;
-    electron_log_1.default.log("🚀 => fileName", fileName);
+    electron_log_1.default.log("electron UPSCAYL => fileName", fileName);
     const fileExt = (0, path_1.parse)(fullfileName).ext;
-    electron_log_1.default.log("🚀 => fileExt", fileExt);
+    electron_log_1.default.log("electron UPSCAYL => fileExt", fileExt);
     const outFile = outputDir +
         "/" +
         fileName +
@@ -367,6 +320,32 @@ electron_updater_1.autoUpdater.on("update-downloaded", (event) => {
             electron_updater_1.autoUpdater.quitAndInstall();
     });
 });
+//------------------------Remove Background-----------------------------//
+electron_1.ipcMain.on(commands_1.default.REMOVE_BACKGROUND, (event, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    // COPY IMAGE TO TMP FOLDER
+    const fullfileName = payload.imagePath;
+    const fileName = (0, path_1.parse)(fullfileName).name;
+    const fileExt = (0, path_1.parse)(fullfileName).ext;
+    const imgDate = yield (0, file_1.getRemoveBgImgData)(fullfileName);
+    const outFilePath = (0, path_1.join)(payload.outputPath, `${fileName}_${new Date().getTime()}${fileExt}`);
+    yield (0, file_1.downloadFile)(outFilePath, imgDate);
+    mainWindow.webContents.send(commands_1.default.REMMOVEBG_DONE, outFilePath);
+}));
+//------------------------ Batch Remove Background-----------------------------//
+electron_1.ipcMain.on(commands_1.default.FOLDER_REMOVE_BACKGROUND, (_, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const fileList = yield (0, file_1.getFileList)(payload.batchFolderPath);
+    let sum = 0;
+    fileList.forEach((item) => __awaiter(void 0, void 0, void 0, function* () {
+        const imgDate = yield (0, file_1.getRemoveBgImgData)(item.filePath);
+        const outFileDir = (0, path_1.join)(payload.outputPath, './rmbg');
+        const outFilePath = (0, path_1.join)(outFileDir, `${item.name}_${new Date().getTime()}${item.ext}`);
+        yield (0, file_1.downloadFile)(outFilePath, imgDate);
+        sum++;
+        if (sum == fileList.length) {
+            mainWindow.webContents.send(commands_1.default.REMMOVEBATCHBG_DONE, outFileDir);
+        }
+    }));
+}));
 //------------------------Video Upscayl-----------------------------//
 // ipcMain.on(commands.UPSCAYL_VIDEO, async (event, payload) => {
 //   // Extract the model
