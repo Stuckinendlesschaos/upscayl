@@ -9,7 +9,7 @@ function Footer() {
           className="font-bold"
           target="_blank"
         >
-          Image Assistant
+          剪佳
         </a>
       </p>
     </div>

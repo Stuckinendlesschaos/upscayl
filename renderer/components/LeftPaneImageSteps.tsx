@@ -133,11 +133,11 @@ function LeftPaneImageSteps({
   };
 
   const modelOptions = [
-    { label: "General Photo (Real-ESRGAN)", value: "realesrgan-x4plus" },
-    { label: "General Photo (Remacri)", value: "remacri" },
-    { label: "General Photo (Ultramix Balanced)", value: "ultramix_balanced" },
-    { label: "General Photo (Ultrasharp)", value: "ultrasharp" },
-    { label: "Digital Art", value: "realesrgan-x4plus-anime" },
+    { label: "通用素材 (Real-ESRGAN)", value: "realesrgan-x4plus" },
+    { label: "通用素材 (Remacri)", value: "remacri" },
+    { label: "通用素材 (Ultramix Balanced)", value: "ultramix_balanced" },
+    { label: "通用素材 (Ultrasharp)", value: "ultrasharp" },
+    { label: "数字艺术照", value: "realesrgan-x4plus-anime" },
   ];
 
   const availableThemes = [
@@ -184,47 +184,47 @@ function LeftPaneImageSteps({
           onClick={handleBatchMode}></input>
         <p
           className="mr-1 inline-block  cursor-help text-sm"
-          data-tip="This will let you upscale all files in a folder at once">
-          Batch
+          data-tip="批量处理一个文件夹的所有素材">
+          批处理
         </p>
       </div>
 
       {/* STEP 1 */}
       <div data-tip={imagePath}>
-        <p className="step-heading">Step 1</p>
+        <p className="step-heading">步骤 1</p>
         <button
           className="btn-primary btn"
           onClick={!batchMode ? selectImageHandler : selectFolderHandler}>
-          Select {batchMode ? "Folder" : "Image"}
+          选择{batchMode ? "文件夹" : "图片"}
         </button>
       </div>
 
       {/* STEP 2 */}
       <div className="animate-step-in" data-tip={outputPath}>
-        <p className="step-heading">Step 2</p>
+        <p className="step-heading">步骤 2</p>
         <p className="mb-2 text-sm">
-          Defaults to {!batchMode ? "Image's" : "Folder's"} path
+          默认{!batchMode ? "图片" : "文件夹"}路径：
         </p>
         <button className="btn-primary btn" onClick={outputHandler}>
-          Set Output Folder
+         另存为
         </button>
       </div>
 
       {/* STEP 3 */}
       <div className="animate-step-in">
-        <p className="step-heading">Step 3</p>
+        <p className="step-heading">步骤 3</p>
         <button
           className="btn-accent btn"
           onClick={bgRemoveHandler}
           disabled={progress.length === 20}>
-          {progress.length === 20 ? "REMOVING⏳" : "REMOVE BACKGROUND"}
+          {progress.length === 20 ? "移除中⏳" : "移除背景"}
         </button>
       </div>
 
       {/* STEP 4 */}
       <div className="animate-step-in">
-        <p className="step-heading">Step 4</p>
-        <p className="mb-2 text-sm">Select Upscaling Type</p>
+        <p className="step-heading">步骤 4</p>
+        <p className="mb-2 text-sm">优化画质类别</p>
 
         <Select
           options={modelOptions}
@@ -260,7 +260,7 @@ function LeftPaneImageSteps({
               onClick={(e) => {
                 setDoubleUpscayl(!doubleUpscayl);
               }}>
-              Double Upscayl
+              双倍优化
             </p>
             <button
               className="badge-info badge cursor-help"
@@ -273,14 +273,14 @@ function LeftPaneImageSteps({
 
       {/* STEP 5 */}
       <div className="animate-step-in">
-        <p className="step-heading">Step 5</p>
+        <p className="step-heading">步骤 5</p>
         {dimensions.width && dimensions.height && (
           <p className="mb-2 text-sm">
-            Upscale from{" "}
+            优化分辨率{" "}
             <span className="font-bold">
               {dimensions.width}x{dimensions.height}
             </span>{" "}
-            to{" "}
+            到{" "}
             <span className="font-bold">
               {doubleUpscayl ? dimensions.width * 16 : dimensions.width * 4}x
               {doubleUpscayl ? dimensions.height * 16 : dimensions.height * 4}
@@ -291,7 +291,7 @@ function LeftPaneImageSteps({
           className="btn-accent btn"
           onClick={upscaylHandler}
           disabled={progress.length === 10}>
-          {progress.length === 10 ? "Upscayling⏳" : "Upscayl"}
+          {progress.length === 10 ? "优化中⏳" : "优化"}
         </button>
       </div>
 

@@ -146,10 +146,10 @@ function SettingsTab({
   };
 
   const modelOptions = [
-    { label: "General Photo (Real-ESRGAN)", value: "realesrgan-x4plus" },
-    { label: "General Photo (Remacri)", value: "remacri" },
-    { label: "General Photo (Ultramix Balanced)", value: "ultramix_balanced" },
-    { label: "General Photo (Ultrasharp)", value: "ultrasharp" },
+    { label: "通用素材 (Real-ESRGAN)", value: "realesrgan-x4plus" },
+    { label: "通用素材 (Remacri)", value: "remacri" },
+    { label: "通用素材 (Ultramix Balanced)", value: "ultramix_balanced" },
+    { label: "通用素材 (Ultrasharp)", value: "ultrasharp" },
     { label: "Digital Art", value: "realesrgan-x4plus-anime" },
   ];
 
@@ -191,7 +191,7 @@ function SettingsTab({
     <div className="animate-step-in animate flex h-screen flex-col gap-7 overflow-y-auto p-5 overflow-x-hidden">
       {/* IMAGE FORMAT BUTTONS */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium">Save Image As:</p>
+        <p className="text-sm font-medium">图片格式:</p>
         <div className="flex flex-col gap-2">
           {batchMode && (
             <p className="text-xs text-base-content/70">
@@ -229,7 +229,7 @@ function SettingsTab({
 
       {/* THEME SELECTOR */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium">Upscayl Theme:</p>
+        <p className="text-sm font-medium">主题:</p>
         <select data-choose-theme className="select-primary select">
           <option value="dark">Default</option>
           {availableThemes.map((theme) => {
@@ -260,7 +260,7 @@ function SettingsTab({
           onClick={copyOnClickHandler}>
           {isCopied ? <span>Copied 📋</span> : <span>Copy 📋</span>}
         </button>
-        <p className="text-sm font-medium">Logs</p>
+        <p className="text-sm font-medium">日志</p>
         <code className="max-h-84 rounded-btn min-h-16 relative flex h-80 flex-col gap-3 overflow-y-auto break-all bg-base-200 p-4 text-xs">
           {logData.length === 0 && (
             <p className="text-base-content/70">No logs to show</p>

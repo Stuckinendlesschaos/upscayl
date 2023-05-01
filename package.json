@@ -1,7 +1,7 @@
 {
   "name": "image-assistant",
   "private": true,
-  "version": "2.0.1",
+  "version": "1.0.1",
   "productName": "Upscayl",
   "homepage": "https://github.com/TGS963/upscayl",
   "contributors": [
@@ -18,7 +18,7 @@
   ],
   "email": "simplelogin-newsletter.j1zez@aleeas.com",
   "license": "AGPL-3.0",
-  "description": "Image Assistant - Free and Open Source AI Image Upscaler",
+  "description": "剪佳 - Free and Open Source AI Image Upscaler",
   "keywords": [
     "AI",
     "Upscaler",

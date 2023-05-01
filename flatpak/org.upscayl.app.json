@@ -32,7 +32,7 @@
         {
           "type": "file",
           "only-arches": ["x86_64"],
-          "url": "https://github.com/upscayl/upscayl/releases/download/v2.0.1/upscayl-2.0.1-linux.zip",
+          "url": "https://github.com/upscayl/upscayl/releases/download/v2.0.2/upscayl-2.0.2-linux.zip",
           "sha256": "96883ae1bb9a3a5c0972ab7e402c5132e40c4fe0ffaeec8753524df16b03de51",
           "dest-filename": "upscayl.zip"
         },

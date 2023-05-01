@@ -13,14 +13,14 @@ const Tabs = ({ selectedTab, setSelectedTab }: TabsProps) => {
         onClick={() => {
           setSelectedTab(0);
         }}>
-        Create
+        创建
       </a>
       <a
         className={`tab ${selectedTab === 1 && "tab-active"}`}
         onClick={() => {
           setSelectedTab(1);
         }}>
-        Settings
+        设置
       </a>
     </div>
   );

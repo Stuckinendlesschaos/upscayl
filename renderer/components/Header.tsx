@@ -9,9 +9,9 @@ export default function Header({ version }: { version: string }) {
         <img src="icon-purple.png" className="inline-block w-14" alt="Upscayl Logo" />
         <div className="flex flex-col justify-center">
           <h1 className="text-3xl font-bold">
-            Image-Assistant <span className="text-xs">{version}</span>
+            剪佳 <span className="text-xs">{version}</span>
           </h1>
-          <p className="">AI Image Helper</p>
+          <p className="">一剪到底 </p>
         </div>
       </div>
     </a>

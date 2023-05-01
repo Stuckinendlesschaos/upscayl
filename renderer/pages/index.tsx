@@ -403,7 +403,7 @@ const Home = () => {
       setUpscaledImagePath("");
     }
 
-    if (!isVideo && (imagePath !== "" || batchFolderPath !== "")) {
+    if (!isVideo && (imagePath !== "" || removebgOfImagePath !== "" || batchFolderPath !== "")) {
       setProgress("Hold on...");
 
       if (doubleUpscayl) {

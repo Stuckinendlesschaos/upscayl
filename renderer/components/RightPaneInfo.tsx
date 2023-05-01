@@ -9,7 +9,7 @@ function RightPaneInfo({ version, batchMode, isVideo }) {
   ) : (
     <>
       <p className="p-5 pb-1 text-lg font-semibold">
-        Select {batchMode ? "a Folder" : "an Image"} to Handle
+        选择{batchMode ? "批量素材" : "图片素材"}处理
       </p>
       {batchMode && (
         <p className="w-full pb-5 text-center md:w-96">
@@ -17,7 +17,7 @@ function RightPaneInfo({ version, batchMode, isVideo }) {
           JPEG & WEBP images.
         </p>
       )}
-      <p className="text-sm">Image-Assistant v{version}</p>
+      <p className="text-sm">剪佳 v{version}</p>
     </>
   );
 }
