@@ -72,9 +72,6 @@ electron_1.app.on("ready", () => __awaiter(void 0, void 0, void 0, function* () 
     if (!electron_is_dev_1.default) {
         electron_updater_1.autoUpdater.checkForUpdates();
     }
-    else {
-        mainWindow.webContents.openDevTools();
-    }
 }));
 // Quit the app once all windows are closed
 electron_1.app.on("window-all-closed", electron_1.app.quit);

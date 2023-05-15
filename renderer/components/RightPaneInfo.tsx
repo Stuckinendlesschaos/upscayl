@@ -13,8 +13,7 @@ function RightPaneInfo({ version, batchMode, isVideo }) {
       </p>
       {batchMode && (
         <p className="w-full pb-5 text-center md:w-96">
-          Make sure that the folder doesn't contain anything except PNG, JPG,
-          JPEG & WEBP images.
+          确保处理的文件不包含PNG、JPG、JPEG和WEBP等不满足格式标准的图片。
         </p>
       )}
       <p className="text-sm">剪佳 v{version}</p>
