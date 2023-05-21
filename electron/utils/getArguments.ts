@@ -1,3 +1,6 @@
+import getPlatform from "../getPlatform";
+const slash: string = getPlatform() === "win" ? "\\" : "/";
+
 export const getSingleImageArguments = (
   inputDir: string,
   fullfileName: string,
@@ -10,11 +13,11 @@ export const getSingleImageArguments = (
 ) => {
   return [
     "-i",
-    inputDir + "/" + fullfileName,
+    inputDir + slash + fullfileName,
     "-o",
     outFile,
     "-s",
-    scale == "2" ? "4" : scale,
+    scale,
     "-m",
     modelsPath,
     "-n",
@@ -37,14 +40,14 @@ export const getSingleImageSharpenArguments = (
 ) => {
   return [
     "-i",
-    inputDir + "/" + fullfileName,
+    inputDir + slash + fullfileName,
     "-o",
     outFile,
     "-s",
     scale,
     "-x",
     "-m",
-    modelsPath + "/" + model,
+    modelsPath + slash + model,
     gpuId ? `-g ${gpuId}` : "",
     "-f",
     saveImageAs,
@@ -58,15 +61,16 @@ export const getDoubleUpscaleArguments = (
   modelsPath: string,
   model: string,
   gpuId: string,
-  saveImageAs: string
+  saveImageAs: string,
+  scale: string
 ) => {
   return [
     "-i",
-    inputDir + "/" + fullfileName,
+    inputDir + slash + fullfileName,
     "-o",
     outFile,
     "-s",
-    "4",
+    scale,
     "-m",
     modelsPath,
     "-n",
@@ -83,7 +87,8 @@ export const getDoubleUpscaleSecondPassArguments = (
   modelsPath: string,
   model: string,
   gpuId: string,
-  saveImageAs: string
+  saveImageAs: string,
+  scale: string
 ) => {
   return [
     "-i",
@@ -91,7 +96,7 @@ export const getDoubleUpscaleSecondPassArguments = (
     "-o",
     isAlpha ? outFile + ".png" : outFile,
     "-s",
-    "4",
+    scale,
     "-m",
     modelsPath,
     "-n",
@@ -108,7 +113,8 @@ export const getBatchArguments = (
   modelsPath: string,
   model: string,
   gpuId: string,
-  saveImageAs: string
+  saveImageAs: string,
+  scale: string
 ) => {
   return [
     "-i",
@@ -116,7 +122,7 @@ export const getBatchArguments = (
     "-o",
     outputDir,
     "-s",
-    "4",
+    scale,
     "-m",
     modelsPath,
     "-n",
@@ -127,13 +133,15 @@ export const getBatchArguments = (
   ];
 };
 
+// ! REDUNDANT
 export const getBatchSharpenArguments = (
   inputDir: string,
   outputDir: string,
   modelsPath: string,
   model: string,
   gpuId: string,
-  saveImageAs: string
+  saveImageAs: string,
+  scale: string
 ) => {
   return [
     "-i",
@@ -141,10 +149,10 @@ export const getBatchSharpenArguments = (
     "-o",
     outputDir,
     "-s",
-    "4",
+    scale,
     "-x",
     "-m",
-    modelsPath + "/" + model,
+    modelsPath + slash + model,
     gpuId ? `-g ${gpuId}` : "",
     "-f",
     saveImageAs,

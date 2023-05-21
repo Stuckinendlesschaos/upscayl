@@ -7,7 +7,7 @@
   "contributors": [
     {
       "name": "Nayam Amarshe",
-      "email": "nayam@amars.he",
+      "email": "nayam.emikx@aleeas.com",
       "url": "https://github.com/NayamAmarshe"
     },
     {
@@ -16,7 +16,7 @@
       "url": "https://github.com/TGS963"
     }
   ],
-  "email": "simplelogin-newsletter.j1zez@aleeas.com",
+  "email": "nayam.emikx@aleeas.com",
   "license": "AGPL-3.0",
   "description": "剪佳 - Free and Open Source AI Image Upscaler",
   "keywords": [
@@ -153,7 +153,7 @@
     "prettier-plugin-tailwindcss": "^0.1.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss": "^3.2.2",
+    "tailwindcss": "^3.3.1",
     "typescript": "^4.8.4"
   },
   "dependencies": {
@@ -161,21 +161,18 @@
     "axios": "^1.3.5",
     "daisyui": "^2.51.4",
     "electron-is-dev": "^2.0.0",
-    "electron-is-packaged": "^1.0.2",
     "electron-log": "^5.0.0-beta.16",
     "electron-next": "^3.1.5",
-    "electron-root-path": "^1.1.0",
     "electron-updater": "^5.3.0",
     "image-size": "^1.0.2",
-    "jotai": "^2.0.3",
+    "jotai": "^2.0.4",
     "react-compare-slider": "^2.2.0",
     "react-dropzone": "^14.2.3",
     "react-image-zoom": "^1.3.1",
     "react-select": "^5.6.0",
     "react-tooltip": "^4.5.0",
     "tailwind-scrollbar": "^2.0.1",
-    "theme-change": "^2.2.0",
-    "upscayl-ffmpeg": "^5.1.1"
+    "theme-change": "^2.2.0"
   },
   "volta": {
     "node": "16.17.0"

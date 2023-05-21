@@ -1,14 +1,16 @@
+import { useAtom, useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import ReactTooltip from "react-tooltip";
 import { themeChange } from "theme-change";
+import { modelsListAtom } from "../atoms/modelsListAtom";
+import useLog from "./hooks/useLog";
 
 interface IProps {
   progress: string;
   selectImageHandler: () => Promise<void>;
   selectFolderHandler: () => Promise<void>;
   handleModelChange: (e: any) => void;
-  handleDrop: (e: any) => void;
   outputHandler: () => Promise<void>;
   bgRemoveHandler: () => Promise<void>;
   upscaylHandler: () => Promise<void>;
@@ -18,18 +20,13 @@ interface IProps {
   outputPath: string;
   doubleUpscayl: boolean;
   setDoubleUpscayl: React.Dispatch<React.SetStateAction<boolean>>;
-  model: string;
-  setModel: React.Dispatch<React.SetStateAction<string>>;
-  isVideo: boolean;
-  setIsVideo: React.Dispatch<React.SetStateAction<boolean>>;
-  saveImageAs: string;
-  setSaveImageAs: React.Dispatch<React.SetStateAction<string>>;
-  gpuId: string;
-  setGpuId: React.Dispatch<React.SetStateAction<string>>;
   dimensions: {
     width: number | null;
     height: number | null;
   };
+  setSaveImageAs: React.Dispatch<React.SetStateAction<string>>;
+  setModel: React.Dispatch<React.SetStateAction<string>>;
+  setGpuId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function LeftPaneImageSteps({
@@ -37,7 +34,6 @@ function LeftPaneImageSteps({
   selectImageHandler,
   selectFolderHandler,
   handleModelChange,
-  handleDrop,
   outputHandler,
   bgRemoveHandler,
   upscaylHandler,
@@ -47,15 +43,10 @@ function LeftPaneImageSteps({
   outputPath,
   doubleUpscayl,
   setDoubleUpscayl,
-  model,
-  setModel,
-  isVideo,
-  setIsVideo,
-  gpuId,
-  setGpuId,
-  saveImageAs,
-  setSaveImageAs,
   dimensions,
+  setSaveImageAs,
+  setModel,
+  setGpuId,
 }: IProps) {
   const [currentModel, setCurrentModel] = useState<{
     label: string;
@@ -65,13 +56,22 @@ function LeftPaneImageSteps({
     value: null,
   });
 
+  const modelOptions = useAtomValue(modelsListAtom);
+
+  const { logit } = useLog();
+
   useEffect(() => {
     themeChange(false);
 
     if (!localStorage.getItem("saveImageAs")) {
+      logit("📢 Setting saveImageAs to png");
       localStorage.setItem("saveImageAs", "png");
     } else {
       const currentlySavedImageFormat = localStorage.getItem("saveImageAs");
+      logit(
+        "📢 Getting saveImageAs from localStorage",
+        currentlySavedImageFormat
+      );
       setSaveImageAs(currentlySavedImageFormat);
     }
 
@@ -79,24 +79,31 @@ function LeftPaneImageSteps({
       setCurrentModel(modelOptions[0]);
       setModel(modelOptions[0].value);
       localStorage.setItem("model", JSON.stringify(modelOptions[0]));
+      logit("📢 Setting model to", modelOptions[0].value);
     } else {
       const currentlySavedModel = JSON.parse(
         localStorage.getItem("model")
-      ) as typeof modelOptions[0];
+      ) as (typeof modelOptions)[0];
       setCurrentModel(currentlySavedModel);
       setModel(currentlySavedModel.value);
+      logit(
+        "📢 Getting model from localStorage",
+        JSON.stringify(currentlySavedModel)
+      );
     }
 
     if (!localStorage.getItem("gpuId")) {
       localStorage.setItem("gpuId", "");
+      logit("📢 Setting gpuId to empty string");
     } else {
       const currentlySavedGpuId = localStorage.getItem("gpuId");
       setGpuId(currentlySavedGpuId);
+      logit("📢 Getting gpuId from localStorage", currentlySavedGpuId);
     }
   }, []);
 
   useEffect(() => {
-    console.log("Current Model: ", currentModel);
+    logit("📢 Setting model to", currentModel.value);
   }, [currentModel]);
 
   const setExportType = (format: string) => {
@@ -132,13 +139,13 @@ function LeftPaneImageSteps({
     },
   };
 
-  const modelOptions = [
-    { label: "通用素材 (Real-ESRGAN)", value: "realesrgan-x4plus" },
-    { label: "通用素材 (Remacri)", value: "remacri" },
-    { label: "通用素材 (Ultramix Balanced)", value: "ultramix_balanced" },
-    { label: "通用素材 (Ultrasharp)", value: "ultrasharp" },
-    { label: "数字艺术照", value: "realesrgan-x4plus-anime" },
-  ];
+  // const modelOptions = [
+  //   { label: "通用素材 (Real-ESRGAN)", value: "realesrgan-x4plus" },
+  //   { label: "通用素材 (Remacri)", value: "remacri" },
+  //   { label: "通用素材 (Ultramix Balanced)", value: "ultramix_balanced" },
+  //   { label: "通用素材 (Ultrasharp)", value: "ultrasharp" },
+  //   { label: "数字艺术照", value: "realesrgan-x4plus-anime" },
+  // ];
 
   const availableThemes = [
     { label: "light", value: "light" },
@@ -181,7 +188,8 @@ function LeftPaneImageSteps({
         <input
           type="checkbox"
           className="toggle"
-          onClick={handleBatchMode}></input>
+          defaultChecked={batchMode}
+          onClick={() => setBatchMode((oldValue) => !oldValue)}></input>
         <p
           className="mr-1 inline-block  cursor-help text-sm"
           data-tip="批量处理一个文件夹的所有素材">

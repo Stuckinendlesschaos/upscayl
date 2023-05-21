@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Select from "react-select";
-import ReactTooltip from "react-tooltip";
 import { themeChange } from "theme-change";
-import log from "electron-log/renderer";
+import commands from "../../electron/commands";
+import { useAtom, useAtomValue } from "jotai";
+import { customModelsPathAtom, scaleAtom } from "../atoms/userSettingsAtom";
+import { modelsListAtom } from "../atoms/modelsListAtom";
+import useLog from "./hooks/useLog";
 
 interface IProps {
   progress: string;
@@ -14,23 +16,11 @@ interface IProps {
   bgRemoveHandler: () => Promise<void>;
   upscaylHandler: () => Promise<void>;
   batchMode: boolean;
-  setBatchMode: React.Dispatch<React.SetStateAction<boolean>>;
-  imagePath: string;
-  outputPath: string;
-  doubleUpscayl: boolean;
-  setDoubleUpscayl: React.Dispatch<React.SetStateAction<boolean>>;
-  model: string;
   setModel: React.Dispatch<React.SetStateAction<string>>;
-  isVideo: boolean;
-  setIsVideo: React.Dispatch<React.SetStateAction<boolean>>;
   saveImageAs: string;
   setSaveImageAs: React.Dispatch<React.SetStateAction<string>>;
   gpuId: string;
   setGpuId: React.Dispatch<React.SetStateAction<string>>;
-  dimensions: {
-    width: number | null;
-    height: number | null;
-  };
   logData: string[];
 }
 
@@ -44,22 +34,14 @@ function SettingsTab({
   bgRemoveHandler,
   upscaylHandler,
   batchMode,
-  setBatchMode,
-  imagePath,
-  outputPath,
-  doubleUpscayl,
-  setDoubleUpscayl,
-  model,
   setModel,
-  isVideo,
-  setIsVideo,
   gpuId,
   setGpuId,
   saveImageAs,
   setSaveImageAs,
-  dimensions,
   logData,
 }: IProps) {
+  // STATES
   const [currentModel, setCurrentModel] = useState<{
     label: string;
     value: string;
@@ -67,16 +49,27 @@ function SettingsTab({
     label: null,
     value: null,
   });
-
+  const [rememberOutputFolder, setRememberOutputFolder] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+
+  const [customModelsPath, setCustomModelsPath] = useAtom(customModelsPathAtom);
+  const modelOptions = useAtomValue(modelsListAtom);
+  const [scale, setScale] = useAtom(scaleAtom);
+
+  const { logit } = useLog();
 
   useEffect(() => {
     themeChange(false);
 
     if (!localStorage.getItem("saveImageAs")) {
+      logit("📢 Setting saveImageAs to png");
       localStorage.setItem("saveImageAs", "png");
     } else {
       const currentlySavedImageFormat = localStorage.getItem("saveImageAs");
+      logit(
+        "📢 Getting saveImageAs from localStorage",
+        currentlySavedImageFormat
+      );
       setSaveImageAs(currentlySavedImageFormat);
     }
 
@@ -84,33 +77,49 @@ function SettingsTab({
       setCurrentModel(modelOptions[0]);
       setModel(modelOptions[0].value);
       localStorage.setItem("model", JSON.stringify(modelOptions[0]));
+      logit("📢 Setting model to", modelOptions[0].value);
     } else {
       const currentlySavedModel = JSON.parse(
         localStorage.getItem("model")
-      ) as typeof modelOptions[0];
+      ) as (typeof modelOptions)[0];
       setCurrentModel(currentlySavedModel);
       setModel(currentlySavedModel.value);
+      logit(
+        "📢 Getting model from localStorage",
+        JSON.stringify(currentlySavedModel)
+      );
     }
 
     if (!localStorage.getItem("gpuId")) {
       localStorage.setItem("gpuId", "");
+      logit("📢 Setting gpuId to empty string");
     } else {
       const currentlySavedGpuId = localStorage.getItem("gpuId");
       setGpuId(currentlySavedGpuId);
+      logit("📢 Getting gpuId from localStorage", currentlySavedGpuId);
+    }
+
+    if (!localStorage.getItem("rememberOutputFolder")) {
+      logit("📢 Setting rememberOutputFolder to false");
+      localStorage.setItem("rememberOutputFolder", "false");
+    } else {
+      const currentlySavedRememberOutputFolder = localStorage.getItem(
+        "rememberOutputFolder"
+      );
+      logit(
+        "📢 Getting rememberOutputFolder from localStorage",
+        currentlySavedRememberOutputFolder
+      );
+      setRememberOutputFolder(
+        currentlySavedRememberOutputFolder === "true" ? true : false
+      );
     }
   }, []);
 
-  useEffect(() => {
-    console.log("Current Model: ", currentModel);
-  }, [currentModel]);
-
+  // HANDLERS
   const setExportType = (format: string) => {
     setSaveImageAs(format);
     localStorage.setItem("saveImageAs", format);
-  };
-
-  const handleBatchMode = () => {
-    setBatchMode((oldValue) => !oldValue);
   };
 
   const handleGpuIdChange = (e) => {
@@ -145,13 +154,13 @@ function SettingsTab({
     },
   };
 
-  const modelOptions = [
-    { label: "通用素材 (Real-ESRGAN)", value: "realesrgan-x4plus" },
-    { label: "通用素材 (Remacri)", value: "remacri" },
-    { label: "通用素材 (Ultramix Balanced)", value: "ultramix_balanced" },
-    { label: "通用素材 (Ultrasharp)", value: "ultrasharp" },
-    { label: "Digital Art", value: "realesrgan-x4plus-anime" },
-  ];
+  // const modelOptions = [
+  //   { label: "通用素材 (Real-ESRGAN)", value: "realesrgan-x4plus" },
+  //   { label: "通用素材 (Remacri)", value: "remacri" },
+  //   { label: "通用素材 (Ultramix Balanced)", value: "ultramix_balanced" },
+  //   { label: "通用素材 (Ultrasharp)", value: "ultrasharp" },
+  //   { label: "Digital Art", value: "realesrgan-x4plus-anime" },
+  // ];
 
   const availableThemes = [
     { label: "light", value: "light" },
@@ -185,13 +194,87 @@ function SettingsTab({
     { label: "winter", value: "winter" },
   ];
 
-  useEffect(() => {}, [imagePath]);
-
   return (
     <div className="animate-step-in animate flex h-screen flex-col gap-7 overflow-y-auto p-5 overflow-x-hidden">
+      {/* THEME SELECTOR */}
+      <div className="flex flex-col gap-2">
+        <p className="text-sm font-medium">UPSCAYL THEME</p>
+        <select data-choose-theme className="select-primary select">
+          <option value="dark">Default</option>
+          {availableThemes.map((theme) => {
+            return (
+              <option value={theme.value} key={theme.value}>
+                {theme.label.toLocaleUpperCase()}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <p className="text-sm font-medium">SAVE OUTPUT FOLDER (PERMANENTLY)</p>
+        <input
+          type="checkbox"
+          className="toggle-primary toggle"
+          checked={rememberOutputFolder}
+          onClick={() => {
+            setRememberOutputFolder((oldValue) => {
+              if (oldValue === true) {
+                localStorage.removeItem("lastOutputFolderPath");
+              }
+
+              return !oldValue;
+            });
+            localStorage.setItem(
+              "rememberOutputFolder",
+              JSON.stringify(!rememberOutputFolder)
+            );
+          }}
+        />
+      </div>
+
+      {/* GPU ID INPUT */}
+      <div className="flex flex-col gap-2">
+        <p className="text-sm font-medium">GPU ID</p>
+        <input
+          type="text"
+          placeholder="Type here"
+          className="input-bordered input w-full max-w-xs"
+          value={gpuId}
+          onChange={handleGpuIdChange}
+        />
+      </div>
+
+      {/* CUSTOM MODEL */}
+      <div className="flex flex-col items-start gap-2">
+        <p className="text-sm font-medium">ADD CUSTOM MODELS</p>
+        <p className="text-sm text-base-content/60">{customModelsPath}</p>
+        <button
+          className="btn-primary btn"
+          onClick={async () => {
+            const customModelPath = await window.electron.invoke(
+              commands.SELECT_CUSTOM_MODEL_FOLDER
+            );
+
+            if (customModelPath !== null) {
+              setCustomModelsPath(customModelPath);
+              window.electron.send(commands.GET_MODELS_LIST, customModelPath);
+            } else {
+              setCustomModelsPath("");
+            }
+          }}>
+          Select Folder
+        </button>
+      </div>
+
       {/* IMAGE FORMAT BUTTONS */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium">图片格式:</p>
+        <div className="flex flex-row gap-1">
+          <p className="text-sm font-medium">SAVE IMAGE AS</p>
+          <p className="badge-primary badge text-[10px] font-medium">
+            EXPERIMENTAL
+          </p>
+        </div>
         <div className="flex flex-col gap-2">
           {batchMode && (
             <p className="text-xs text-base-content/70">
@@ -227,41 +310,40 @@ function SettingsTab({
         </div>
       </div>
 
-      {/* THEME SELECTOR */}
-      <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium">主题:</p>
-        <select data-choose-theme className="select-primary select">
-          <option value="dark">Default</option>
-          {availableThemes.map((theme) => {
-            return (
-              <option value={theme.value} key={theme.value}>
-                {theme.label.toLocaleUpperCase()}
-              </option>
-            );
-          })}
-        </select>
-      </div>
-
-      {/* GPU ID INPUT */}
-      <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium">GPU ID:</p>
+      {/* IMAGE SCALE */}
+      <div>
+        <div className="flex flex-row gap-1">
+          <p className="text-sm font-medium">IMAGE SCALE</p>
+          <p className="badge-primary badge text-[10px] font-medium">
+            EXPERIMENTAL
+          </p>
+        </div>
         <input
-          type="text"
-          placeholder="Type here"
-          className="input-bordered input w-full max-w-xs"
-          value={gpuId}
-          onChange={handleGpuIdChange}
+          type="range"
+          min="2"
+          max="4"
+          value={scale}
+          onChange={(e: any) => {
+            setScale(e.target.value.toString());
+          }}
+          step="1"
+          className="range range-primary mt-2"
         />
+        <div className="flex w-full justify-between px-2 text-xs font-semibold text-base-content">
+          <span>2x</span>
+          <span>3x</span>
+          <span>4x</span>
+        </div>
       </div>
 
       <div className="relative flex flex-col gap-2">
         <button
-          className="btn-primary btn-xs btn absolute top-10 right-2 z-10"
+          className="btn-primary btn-xs btn absolute right-2 top-10 z-10"
           onClick={copyOnClickHandler}>
           {isCopied ? <span>Copied 📋</span> : <span>Copy 📋</span>}
         </button>
-        <p className="text-sm font-medium">日志</p>
-        <code className="max-h-84 rounded-btn min-h-16 relative flex h-80 flex-col gap-3 overflow-y-auto break-all bg-base-200 p-4 text-xs">
+        <p className="text-sm font-medium">LOGS</p>
+        <code className="rounded-btn relative flex h-52 max-h-52 flex-col gap-3 overflow-y-auto break-all bg-base-200 p-4 text-xs">
           {logData.length === 0 && (
             <p className="text-base-content/70">No logs to show</p>
           )}

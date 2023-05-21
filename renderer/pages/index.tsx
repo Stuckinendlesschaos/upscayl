@@ -11,6 +11,9 @@ import Tabs from "../components/Tabs";
 import SettingsTab from "../components/SettingsTab";
 import { useAtom } from "jotai";
 import { logAtom } from "../atoms/logAtom";
+import { modelsListAtom } from "../atoms/modelsListAtom";
+import { batchModeAtom, scaleAtom } from "../atoms/userSettingsAtom";
+import useLog from "../components/hooks/useLog";
 
 const Home = () => {
   // STATES
@@ -18,17 +21,17 @@ const Home = () => {
   const [upscaledImagePath, setUpscaledImagePath] = useState("");
   const [removebgOfImagePath,setremovebgOfImagePath]= useState("");                     
   const [outputPath, setOutputPath] = useState("");
-  const [scaleFactor, setScaleFactor] = useState(4);
+  const [scaleFactor] = useState(4);
   const [progress, setProgress] = useState("");
   const [model, setModel] = useState("realesrgan-x4plus");
   const [loaded, setLoaded] = useState(false);
   const [version, setVersion] = useState("");
-  const [batchMode, setBatchMode] = useState(false);
+  const [batchMode, setBatchMode] = useAtom(batchModeAtom);
   const [batchFolderPath, setBatchFolderPath] = useState("");
   const [rmbgBatchFolderPath, setRmbgBatchFolderPath] = useState("");
   const [upscaledBatchFolderPath, setUpscaledBatchFolderPath] = useState("");
   const [doubleUpscayl, setDoubleUpscayl] = useState(false);
-  const [isVideo, setIsVideo] = useState(false);
+  const [isVideo] = useState(false);
   const [videoPath, setVideoPath] = useState("");
   const [upscaledVideoPath, setUpscaledVideoPath] = useState("");
   const [RemovebgOfVideoPath,setRemovebgOfVideoPath]= useState("");
@@ -43,20 +46,10 @@ const Home = () => {
   });
   const [selectedTab, setSelectedTab] = useState(0);
   const [logData, setLogData] = useAtom(logAtom);
+  const [modelOptions, setModelOptions] = useAtom(modelsListAtom);
+  const [scale] = useAtom(scaleAtom);
 
-  // (function () {
-  //   let info = console.info;
-
-  //   console.log = function () {
-  //     var args = Array.prototype.slice.call(arguments);
-  //     info.apply(this, args);
-  //   };
-  // })();
-
-  const addToLog = (data: string) => {
-    console.log("🚀 => file: index.tsx:52 => data:", data);
-    setLogData((prevLogData) => [...prevLogData, data]);
-  };
+  const { logit } = useLog();
 
   // EFFECTS
   useEffect(() => {
@@ -76,12 +69,12 @@ const Home = () => {
           data.includes("encode")
             ? "ENCODING ERROR => "
             : "DECODING ERROR => " +
-                "This image is possibly corrupt or not supported by Upscayl. You could try converting the image into another format and upscaling again. Otherwise, make sure that the output path is correct and you have the proper write permissions for the directory. If not, then unfortuantely this image is not supported by Upscayl, sorry."
+                "This image is possibly corrupt or not supported by Upscayl, or your GPU drivers are acting funny (Did you check if your GPU is compatible and drivers are alright?). You could try converting the image into another format and upscaling again. Also make sure that the output path is correct and you have the proper write permissions for the directory. If not, then unfortuantely there's not much we can do to help, sorry."
         );
         resetImagePaths();
       } else if (data.includes("uncaughtException")) {
         alert(
-          "Upscayl encountered an error. Possibly, the upscayl binary failed to execute the commands properly. Try launching Upscayl using commandline through Terminal and see if you get any information. You can post an issue on Upscayl's GitHub repository for more help."
+          "Upscayl encountered an error. Possibly, the upscayl binary failed to execute the commands properly. Try checking the logs to see if you get any information. You can post an issue on Upscayl's GitHub repository for more help."
         );
         resetImagePaths();
       }
@@ -91,7 +84,7 @@ const Home = () => {
     window.electron.on(commands.REMMOVEBG_DONE, (_, data: string) => {
       setProgress("");
       setremovebgOfImagePath(data);
-      addToLog(data);
+      // addToLog(data);
     });
 
     // 批处理背景移除并且下载完成 重新指定文件目录（移除背景后的rmbg目录）
@@ -99,7 +92,7 @@ const Home = () => {
       setProgress("");
       setBatchFolderPath(data)
       setOutputPath(data + "Plus");
-      addToLog(data);
+      // addToLog(data);
     });
 
     // UPSCAYL PROGRESS
@@ -108,7 +101,7 @@ const Home = () => {
         setProgress(data);
       }
       handleErrors(data);
-      addToLog(data);
+      logit(`📢 UPSCAYL_PROGRESS: `, data);
     });
 
     // FOLDER UPSCAYL PROGRESS
@@ -117,7 +110,7 @@ const Home = () => {
         setProgress(data);
       }
       handleErrors(data);
-      addToLog(data);
+      logit(`📢 FOLDER_UPSCAYL_PROGRESS: `, data);
     });
 
     // DOUBLE UPSCAYL PROGRESS
@@ -129,7 +122,7 @@ const Home = () => {
         setProgress(data);
       }
       handleErrors(data);
-      addToLog(data);
+      logit(`📢 DOUBLE_UPSCAYL_PROGRESS: `, data);
     });
 
     // VIDEO UPSCAYL PROGRESS
@@ -138,21 +131,22 @@ const Home = () => {
         setProgress(data);
       }
       handleErrors(data);
-      addToLog(data);
+      logit(`📢 UPSCAYL_VIDEO_PROGRESS: `, data);
     });
 
     // UPSCAYL DONE
     window.electron.on(commands.UPSCAYL_DONE, (_, data: string) => { 
       setProgress("");
       setUpscaledImagePath(data);
-      addToLog(data);
+      logit("upscaledImagePath: ", upscaledImagePath);
+      logit(`📢 UPSCAYL_DONE: `, data);
     });
 
     // FOLDER UPSCAYL DONE
     window.electron.on(commands.FOLDER_UPSCAYL_DONE, (_, data: string) => {
       setProgress("");
       setUpscaledBatchFolderPath(data);
-      addToLog(data);
+      logit(`📢 FOLDER_UPSCAYL_DONE: `, data);
     });
 
     // DOUBLE UPSCAYL DONE
@@ -160,15 +154,61 @@ const Home = () => {
       setProgress("");
       setDoubleUpscaylCounter(0);
       setUpscaledImagePath(data);
-      addToLog(data);
+      logit(`📢 DOUBLE_UPSCAYL_DONE: `, data);
     });
 
     // VIDEO UPSCAYL DONE
     window.electron.on(commands.UPSCAYL_VIDEO_DONE, (_, data: string) => {
       setProgress("");
       setUpscaledVideoPath(data);
-      addToLog(data);
+      logit(`📢 UPSCAYL_VIDEO_DONE: `, data);
     });
+
+    // CUSTOM FOLDER LISTENER
+    window.electron.on(
+      commands.CUSTOM_MODEL_FILES_LIST,
+      (_, data: string[]) => {
+        logit(`📢 CUSTOM_MODEL_FILES_LIST: `, data);
+        const newModelOptions = data.map((model) => {
+          return {
+            value: model,
+            label: model,
+          };
+        });
+
+        // Add newModelsList to modelOptions and remove duplicates
+        const combinedModelOptions = [...modelOptions, ...newModelOptions];
+        const uniqueModelOptions = combinedModelOptions.filter(
+          // Check if any model in the array appears more than once
+          (model, index, array) =>
+            array.findIndex((t) => t.value === model.value) === index
+        );
+        setModelOptions(uniqueModelOptions);
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    const customModelsPath = JSON.parse(
+      localStorage.getItem("customModelsPath")
+    );
+
+    if (customModelsPath !== null) {
+      window.electron.send(commands.GET_MODELS_LIST, customModelsPath);
+      logit("📢 GET_MODELS_LIST: ", customModelsPath);
+    }
+  }, []);
+
+  useEffect(() => {
+    const rememberOutputFolder = localStorage.getItem("rememberOutputFolder");
+    const lastOutputFolderPath = localStorage.getItem("lastOutputFolderPath");
+
+    if (rememberOutputFolder === "true") {
+      setOutputPath(lastOutputFolderPath);
+    } else {
+      setOutputPath("");
+      localStorage.removeItem("lastOutputFolderPath");
+    }
   }, []);
 
   useEffect(() => {
@@ -177,17 +217,10 @@ const Home = () => {
 
   useEffect(() => {
     if (imagePath.length > 0 && !isVideo) {
-      const filePath = imagePath;
-      console.log(
-        "🚀 => file: index.jsx => line 109 => useEffect => filePath",
-        filePath
-      );
+      logit("📢 imagePath: ", imagePath);
 
       const extension = imagePath.toLocaleLowerCase().split(".").pop();
-      console.log(
-        "🚀 => file: index.jsx => line 111 => useEffect => extension",
-        extension
-      );
+      logit("📢 Extension: ", extension);
 
       if (!allowedFileTypes.includes(extension.toLowerCase())) {
         alert("Please select an image");
@@ -196,11 +229,7 @@ const Home = () => {
     } else if (videoPath.length > 0 && isVideo) {
       const filePath = videoPath;
 
-      console.log("🚀 => file: index.tsx => line 146 => filePath", filePath);
-
       const extension = videoPath.toLocaleLowerCase().split(".").pop();
-
-      console.log("🚀 => file: index.tsx => line 150 => extension", extension);
 
       if (!allowedVideoFileTypes.includes(extension.toLowerCase())) {
         alert("Please select an MP4, WebM or MKV video");
@@ -212,10 +241,13 @@ const Home = () => {
   }, [imagePath, videoPath]);
 
   const resetImagePaths = () => {
+    logit("📢 Resetting image paths");
+
     setDimensions({
       width: null,
       height: null,
     });
+
     setProgress("");
 
     SetImagePath("");
@@ -254,9 +286,11 @@ const Home = () => {
 
     var path = await window.electron.invoke(commands.SELECT_FILE);
 
-    if (path !== "cancelled") {
+    if (path !== null) {
+      logit("📢 Selected Image Path: ", path);
       SetImagePath(path);
       var dirname = path.match(/(.*)[\/\\]/)[1] || "";
+      logit("📢 Selected Image Directory: ", dirname);
       setOutputPath(dirname);
     }
   };
@@ -266,9 +300,15 @@ const Home = () => {
 
     var path = await window.electron.invoke(commands.SELECT_FOLDER);
 
-    if (path !== "cancelled") {
+    if (path !== null) {
+      logit("📢 Selected Folder Path: ", path);
       setBatchFolderPath(path);
       setOutputPath(path + "Plus");
+      // setOutputPath(path + "_upscayled");
+    } else {
+      logit("📢 Folder selection cancelled");
+      setBatchFolderPath("");
+      setOutputPath("");
     }
   };
 
@@ -282,6 +322,7 @@ const Home = () => {
 
   const handleModelChange = (e: any) => {
     setModel(e.value);
+    logit("📢 Model changed: ", e.value);
     localStorage.setItem(
       "model",
       JSON.stringify({ label: e.label, value: e.value })
@@ -303,6 +344,7 @@ const Home = () => {
   };
 
   const openFolderHandler = (e) => {
+    logit("📢 OPEN_FOLDER: ", upscaledBatchFolderPath);
     window.electron.send(commands.OPEN_FOLDER, upscaledBatchFolderPath);
   };
 
@@ -310,39 +352,50 @@ const Home = () => {
     e.preventDefault();
     resetImagePaths();
 
+    if (
+      e.dataTransfer.items.length === 0 ||
+      e.dataTransfer.files.length === 0
+    ) {
+      logit("📢 No valid files dropped");
+      alert("Please drag and drop an image");
+      return;
+    }
+
     const type = e.dataTransfer.items[0].type;
-    console.log("🚀 => handleDrop => type", type);
     const filePath = e.dataTransfer.files[0].path;
-    console.log("🚀 => handleDrop => filePath", filePath);
     const extension = e.dataTransfer.files[0].name.split(".").at(-1);
-    console.log("🚀 => handleDrop => extension", extension);
+    logit("📢 Dropped file: ", JSON.stringify({ type, filePath, extension }));
 
     if (
       (!type.includes("image") && !type.includes("video")) ||
       (!allowedFileTypes.includes(extension.toLowerCase()) &&
         !allowedVideoFileTypes.includes(extension.toLowerCase()))
     ) {
+      logit("📢 Invalid file dropped");
       alert("Please drag and drop an image");
     } else {
       if (isVideo) {
         setVideoPath(filePath);
       } else {
+        logit("📢 Setting image path: ", filePath);
         SetImagePath(filePath);
       }
 
       var dirname = filePath.match(/(.*)[\/\\]/)[1] || "";
-      console.log("🚀 => handleDrop => dirname", dirname);
+      logit("📢 Setting output path: ", dirname);
       setOutputPath(dirname);
     }
   };
 
   const handlePaste = (e) => {
-    console.log(e);
     resetImagePaths();
     e.preventDefault();
+
     const type = e.clipboardData.items[0].type;
     const filePath = e.clipboardData.files[0].path;
     const extension = e.clipboardData.files[0].name.split(".").at(-1);
+
+    logit("📢 Pasted file: ", JSON.stringify({ type, filePath, extension }));
 
     if (
       !type.includes("image") &&
@@ -352,16 +405,25 @@ const Home = () => {
     } else {
       SetImagePath(filePath);
       var dirname = filePath.match(/(.*)[\/\\]/)[1] || "";
+      logit("📢 Setting output path: ", dirname);
       setOutputPath(dirname);
     }
   };
 
   const outputHandler = async () => {
     var path = await window.electron.invoke(commands.SELECT_FOLDER);
-    if (path !== "cancelled") {
+    if (path !== null) {
+      logit("📢 Setting Output Path: ", path);
       setOutputPath(path);
+
+      const rememberOutputFolder = localStorage.getItem("rememberOutputFolder");
+
+      if (rememberOutputFolder) {
+        logit("📢 Remembering Output Folder: ", path);
+        localStorage.setItem("lastOutputFolderPath", path);
+      }
     } else {
-      console.log("Getting output path from input file");
+      setOutputPath("");
     }
   };
 
@@ -400,6 +462,7 @@ const Home = () => {
     if (isVideo) {
       setUpscaledVideoPath("");
     } else {
+      logit("📢 Resetting Upscaled Image Path");
       setUpscaledImagePath("");
     }
 
@@ -413,39 +476,63 @@ const Home = () => {
           model,
           gpuId: gpuId.length === 0 ? null : gpuId,
           saveImageAs,
+          scale,
         });
+        logit("📢 DOUBLE_UPSCAYL");
       } else if (batchMode) {
         setDoubleUpscayl(false);
-        await window.electron.send(commands.FOLDER_UPSCAYL, {
+        window.electron.send(commands.FOLDER_UPSCAYL, {
           scaleFactor,
           batchFolderPath,
           outputPath,
           model,
           gpuId: gpuId.length === 0 ? null : gpuId,
           saveImageAs,
+          scale,
         });
+        logit("📢 FOLDER_UPSCAYL");
       } else {
-        await window.electron.send(commands.UPSCAYL, {
+        window.electron.send(commands.UPSCAYL, {
           scaleFactor,
           imagePath: removebgOfImagePath.length > 0 ? removebgOfImagePath : imagePath,
           outputPath,
           model,
           gpuId: gpuId.length === 0 ? null : gpuId,
           saveImageAs,
+          scale,
         });
+        logit("📢 UPSCAYL");
       }
-    } else if (isVideo && videoPath !== "") {
-      await window.electron.send(commands.UPSCAYL_VIDEO, {
-        scaleFactor,
-        videoPath,
-        outputPath,
-        model,
-        gpuId: gpuId.length === 0 ? null : gpuId,
-        saveImageAs,
-      });
-    } else {
-      alert(`Please select ${isVideo ? "a video" : "an image"} to upscale`);
     }
+    // else if (isVideo && videoPath !== "") {
+    // window.electron.send(commands.UPSCAYL_VIDEO, {
+    //   scaleFactor,
+    //   videoPath,
+    //   outputPath,
+    //   model,
+    //   gpuId: gpuId.length === 0 ? null : gpuId,
+    //   saveImageAs,
+    // });
+    // }
+    else {
+      alert(`Please select ${isVideo ? "a video" : "an image"} to upscale`);
+      logit("📢 No valid image selected");
+    }
+  };
+
+  const stopHandler = () => {
+    window.electron.send(commands.STOP);
+    logit("📢 Stopping Upscayl");
+    resetImagePaths();
+  };
+
+  const formatPath = (path) => {
+    //USE REGEX TO GET THE FILENAME AND ENCODE IT INTO PROPER FORM IN ORDER TO AVOID ERRORS DUE TO SPECIAL CHARACTERS
+    logit("📢 Formatting path: ", path);
+    return path.replace(
+      /([^/\\]+)$/i,
+      encodeURIComponent(path.match(/[^/\\]+$/i)[0])
+    );
   };
 
   const allowedFileTypes = ["png", "jpg", "jpeg", "webp"];
@@ -504,7 +591,6 @@ const Home = () => {
             selectImageHandler={selectImageHandler}
             selectFolderHandler={selectFolderHandler}
             handleModelChange={handleModelChange}
-            handleDrop={handleDrop}
             outputHandler={outputHandler}
             bgRemoveHandler={bgRemoveHandler}
             upscaylHandler={upscaylHandler}
@@ -514,15 +600,10 @@ const Home = () => {
             outputPath={outputPath}
             doubleUpscayl={doubleUpscayl}
             setDoubleUpscayl={setDoubleUpscayl}
-            model={model}
-            setModel={setModel}
-            isVideo={isVideo}
-            setIsVideo={setIsVideo}
-            gpuId={gpuId}
-            setGpuId={setGpuId}
-            saveImageAs={saveImageAs}
-            setSaveImageAs={setSaveImageAs}
             dimensions={dimensions}
+            setGpuId={setGpuId}
+            setModel={setModel}
+            setSaveImageAs={setSaveImageAs}
           />
         )}
 
@@ -537,20 +618,11 @@ const Home = () => {
             bgRemoveHandler={bgRemoveHandler}
             upscaylHandler={upscaylHandler}
             batchMode={batchMode}
-            setBatchMode={setBatchMode}
-            imagePath={imagePath}
-            outputPath={outputPath}
-            doubleUpscayl={doubleUpscayl}
-            setDoubleUpscayl={setDoubleUpscayl}
-            model={model}
             setModel={setModel}
-            isVideo={isVideo}
-            setIsVideo={setIsVideo}
             gpuId={gpuId}
             setGpuId={setGpuId}
             saveImageAs={saveImageAs}
             setSaveImageAs={setSaveImageAs}
-            dimensions={dimensions}
             logData={logData}
           />
         )}
@@ -573,6 +645,7 @@ const Home = () => {
           <ProgressBar
             progress={progress}
             doubleUpscaylCounter={doubleUpscaylCounter}
+            stopHandler={stopHandler}
           />
         ) : null}
 
@@ -612,7 +685,11 @@ const Home = () => {
               <img
                 src={
                   "file://" +
-                  `${upscaledImagePath ? upscaledImagePath : imagePath}`
+                  `${
+                    upscaledImagePath
+                      ? formatPath(upscaledImagePath)
+                      : formatPath(imagePath)
+                  }`
                 }
                 onLoad={(e: any) => {
                   setDimensions({
@@ -669,10 +746,12 @@ const Home = () => {
                     </p>
 
                     <img
-                      src={
-                        "file://" + 
-                        `${removebgOfImagePath ? removebgOfImagePath : imagePath}`
-                      }
+                      // src={
+                      //   "file://" + 
+                      //   `${removebgOfImagePath ? removebgOfImagePath : imagePath}`
+                      // }
+                      // src={"file:///" + formatPath(imagePath)}
+                      src={"file:///" + formatPath( `${removebgOfImagePath ? removebgOfImagePath : imagePath}`)}
                       alt="Original"
                       onMouseMove={handleMouseMove}
                       style={{
@@ -690,7 +769,7 @@ const Home = () => {
                       Upscayled
                     </p>
                     <img
-                      src={"file://" + upscaledImagePath}
+                      src={"file://" + formatPath(upscaledImagePath)}
                       alt="Upscayl"
                       style={{
                         objectFit: "contain",
