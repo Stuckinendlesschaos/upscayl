@@ -529,10 +529,12 @@ const Home = () => {
   const formatPath = (path) => {
     //USE REGEX TO GET THE FILENAME AND ENCODE IT INTO PROPER FORM IN ORDER TO AVOID ERRORS DUE TO SPECIAL CHARACTERS
     logit("📢 Formatting path: ", path);
-    return path.replace(
+    let res = path.replace(
       /([^/\\]+)$/i,
       encodeURIComponent(path.match(/[^/\\]+$/i)[0])
     );
+    console.log("formatPath return ", res);
+    return res
   };
 
   const allowedFileTypes = ["png", "jpg", "jpeg", "webp"];
@@ -683,12 +685,20 @@ const Home = () => {
                 hideZoomOptions={true}
               />
               <img
+                // src={
+                //   "file://" +
+                //   `${
+                //     upscaledImagePath
+                //       ? formatPath(upscaledImagePath)
+                //       : formatPath(imagePath)
+                //   }`
+                // }
                 src={
                   "file://" +
                   `${
                     upscaledImagePath
-                      ? formatPath(upscaledImagePath)
-                      : formatPath(imagePath)
+                      ? upscaledImagePath
+                      : imagePath
                   }`
                 }
                 onLoad={(e: any) => {
@@ -746,12 +756,11 @@ const Home = () => {
                     </p>
 
                     <img
-                      // src={
-                      //   "file://" + 
-                      //   `${removebgOfImagePath ? removebgOfImagePath : imagePath}`
-                      // }
+                      src={
+                        "file://" + 
+                        `${removebgOfImagePath ? removebgOfImagePath : imagePath}`
+                      }
                       // src={"file:///" + formatPath(imagePath)}
-                      src={"file:///" + formatPath( `${removebgOfImagePath ? removebgOfImagePath : imagePath}`)}
                       alt="Original"
                       onMouseMove={handleMouseMove}
                       style={{
@@ -769,7 +778,8 @@ const Home = () => {
                       Upscayled
                     </p>
                     <img
-                      src={"file://" + formatPath(upscaledImagePath)}
+                      // src={"file://" + formatPath(upscaledImagePath)}
+                      src={"file://" + upscaledImagePath}
                       alt="Upscayl"
                       style={{
                         objectFit: "contain",
