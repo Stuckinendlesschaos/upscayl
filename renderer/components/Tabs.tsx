@@ -22,6 +22,13 @@ const Tabs = ({ selectedTab, setSelectedTab }: TabsProps) => {
         }}>
         设置
       </a>
+      <a
+        className={`tab ${selectedTab === 2 && "tab-active"}`}
+        onClick={() => {
+          setSelectedTab(2);
+        }}>
+        图片编辑
+      </a>
     </div>
   );
 };

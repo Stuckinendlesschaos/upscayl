@@ -1,36 +1,36 @@
 @font-face {
-  font-family: "Poppins";
-  src: url("../fonts/poppins/Poppins-Regular.ttf");
+  font-family: 'Poppins';
+  src: url('../fonts/poppins/Poppins-Regular.ttf');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: "Poppins";
-  src: url("../fonts/poppins/Poppins-Medium.ttf");
+  font-family: 'Poppins';
+  src: url('../fonts/poppins/Poppins-Medium.ttf');
   font-weight: 500;
   font-style: normal;
 }
 @font-face {
-  font-family: "Poppins";
-  src: url("../fonts/poppins/Poppins-SemiBold.ttf");
+  font-family: 'Poppins';
+  src: url('../fonts/poppins/Poppins-SemiBold.ttf');
   font-weight: 600;
   font-style: normal;
 }
 @font-face {
-  font-family: "Poppins";
-  src: url("../fonts/poppins/Poppins-Bold.ttf");
+  font-family: 'Poppins';
+  src: url('../fonts/poppins/Poppins-Bold.ttf');
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
-  font-family: "Poppins";
-  src: url("../fonts/poppins/Poppins-ExtraBold.ttf");
+  font-family: 'Poppins';
+  src: url('../fonts/poppins/Poppins-ExtraBold.ttf');
   font-weight: 800;
   font-style: normal;
 }
 @font-face {
-  font-family: "Poppins";
-  src: url("../fonts/poppins/Poppins-Black.ttf");
+  font-family: 'Poppins';
+  src: url('../fonts/poppins/Poppins-Black.ttf');
   font-weight: 900;
   font-style: normal;
 }
@@ -42,7 +42,7 @@
 @layer base {
   * {
     @apply select-none;
-    font-family: "Poppins", sans-serif;
+    font-family: 'Poppins', sans-serif;
   }
 
   ::-webkit-scrollbar {
@@ -120,8 +120,7 @@
   }
 
   .outline-title {
-    text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5),
-      0px 0px 10px rgba(255, 255, 255, 1);
+    text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5), 0px 0px 10px rgba(255, 255, 255, 1);
   }
   .outline-title-none {
     text-shadow: none;
@@ -148,7 +147,7 @@
   animation: animate-step-in 0.6s cubic-bezier(0.07, 0.43, 0.02, 1);
 }
 
-.progress-bar{
+.progress-bar {
   z-index: 99999;
 }
 
@@ -164,4 +163,8 @@
     opacity: 1;
     transform: translateY(0px);
   }
+}
+
+.mgr-10 {
+  margin-right: 10px;
 }

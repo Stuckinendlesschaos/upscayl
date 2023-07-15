@@ -1,10 +1,8 @@
-import "../styles/globals.css";
-import Head from "next/head";
-import { AppProps } from "next/app";
-import { useEffect } from "react";
-import { themeChange } from "theme-change";
-import log from "electron-log/renderer";
-import { Provider } from "jotai";
+import { AppProps } from 'next/app'
+import { Provider } from 'jotai'
+import Head from 'next/head'
+import '../styles/globals.css'
+import '../styles/tabs.css'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
@@ -16,7 +14,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <Component {...pageProps} data-theme="dark" />
       </Provider>
     </>
-  );
-};
+  )
+}
 
-export default MyApp;
+export default MyApp

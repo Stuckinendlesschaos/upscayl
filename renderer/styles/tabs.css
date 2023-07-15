@@ -1,0 +1,8 @@
+.input-item {
+  margin-top: 10px;
+  background-color: aliceblue;
+  padding: 5px;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
