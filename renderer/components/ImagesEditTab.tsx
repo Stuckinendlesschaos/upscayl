@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import commands from '../../electron/commands'
+import { client } from '@gradio/client'
 
 interface IProps {
   imagePath: string
@@ -20,9 +21,17 @@ function ImagesEditTab({ imagePath, selectImageHandler }: IProps) {
       type: 'custom'
     }
   ])
-  const addConcept = () => {
+  const addConcept = async () => {
     setConceptList([...conceptList, { value: '', type: 'style' }])
     console.log('conceptList ', conceptList)
+
+    // const app = await client('https://editing-images-ledits--q54f9.hf.space/')
+    // const result = await app.predict(0, [
+    //   'Howdy!', // string  in 'Concept' Textbox component
+    //   'Howdy!', // string  in 'Concept' Textbox component
+    //   'Howdy!' // string  in 'Concept' Textbox component
+    // ])
+    // console.log(result)
   }
   const delConcept = (index) => {
     const list = conceptList.filter((item, i) => i !== index)

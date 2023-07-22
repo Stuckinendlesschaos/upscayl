@@ -138,6 +138,7 @@
     ]
   },
   "devDependencies": {
+    "@gradio/client": "^0.1.4",
     "@types/electron": "^1.6.10",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.25",
