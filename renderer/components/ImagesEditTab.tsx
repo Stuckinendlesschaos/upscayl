@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
 import commands from '../../electron/commands'
-import { client } from '@gradio/client'
 
 interface IProps {
   imagePath: string
@@ -24,14 +23,6 @@ function ImagesEditTab({ imagePath, selectImageHandler }: IProps) {
   const addConcept = async () => {
     setConceptList([...conceptList, { value: '', type: 'style' }])
     console.log('conceptList ', conceptList)
-
-    // const app = await client('https://editing-images-ledits--q54f9.hf.space/')
-    // const result = await app.predict(0, [
-    //   'Howdy!', // string  in 'Concept' Textbox component
-    //   'Howdy!', // string  in 'Concept' Textbox component
-    //   'Howdy!' // string  in 'Concept' Textbox component
-    // ])
-    // console.log(result)
   }
   const delConcept = (index) => {
     const list = conceptList.filter((item, i) => i !== index)
@@ -57,34 +48,54 @@ function ImagesEditTab({ imagePath, selectImageHandler }: IProps) {
           选择图片
         </button>
         {imagePath && (
-          <button className=" btn-primary btn" onClick={addConcept}>
+          <button
+            className=" btn-primary btn"
+            onClick={addConcept}
+            disabled={conceptList.length == 3}
+          >
             增加想法
           </button>
         )}
       </div>
-      <div>
-        <p>图片信息:</p>
-        <textarea value={imageInfo} onChange={handleImageInfoChange} />
-      </div>
+      {imagePath && (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-medium">图片信息:</p>
+          <textarea
+            value={imageInfo}
+            onChange={handleImageInfoChange}
+            className="input-bordered input w-full max-w-xs"
+          />
+        </div>
+      )}
       <div>
         {conceptList.map((item, index) => {
           return (
-            <div className="input-item">
-              <div className="input-item">
-                类型:
-                <select name="" id="" onChange={(event) => handleSelectChange(event, index)}>
+            <div className="flex flex-col gap-2" key={index}>
+              <div className="text-sm font-medium">
+                <p className="text-sm font-medium">类型：</p>
+                <select
+                  name=""
+                  id=""
+                  onChange={(event) => handleSelectChange(event, index)}
+                  className="select-primary select"
+                >
                   <option value="custom">custom</option>
                   <option value="style">style</option>
                   <option value="object">object</option>
                   <option value="faces">faces</option>
                 </select>
               </div>
-              <div>
-                想法：
-                <input type="text" placeholder="增加想法" itemID="item.value" />
+              <div className="flex flex-col gap-2">
+                <p className="text-sm font-medium"> 想法：</p>
+                <input
+                  type="text"
+                  placeholder="增加想法"
+                  itemID="item.value"
+                  className="input-bordered input w-full max-w-xs"
+                />
               </div>
               <div>
-                <button className="btn" onClick={() => delConcept(index)}>
+                <button className="mgr-10 btn-danger btn" onClick={() => delConcept(index)}>
                   删除想法
                 </button>
               </div>
