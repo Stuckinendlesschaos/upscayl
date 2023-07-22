@@ -198,7 +198,7 @@ function SettingsTab({
     <div className="animate-step-in animate flex h-screen flex-col gap-7 overflow-y-auto p-5 overflow-x-hidden">
       {/* THEME SELECTOR */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium">UPSCAYL THEME</p>
+        <p className="text-sm font-medium">主题</p>
         <select data-choose-theme className="select-primary select">
           <option value="dark">Default</option>
           {availableThemes.map((theme) => {
@@ -247,7 +247,7 @@ function SettingsTab({
 
       {/* CUSTOM MODEL */}
       <div className="flex flex-col items-start gap-2">
-        <p className="text-sm font-medium">ADD CUSTOM MODELS</p>
+        <p className="text-sm font-medium">自定义模型导入</p>
         <p className="text-sm text-base-content/60">{customModelsPath}</p>
         <button
           className="btn-primary btn"
@@ -270,9 +270,9 @@ function SettingsTab({
       {/* IMAGE FORMAT BUTTONS */}
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-1">
-          <p className="text-sm font-medium">SAVE IMAGE AS</p>
+          <p className="text-sm font-medium">另存入</p>
           <p className="badge-primary badge text-[10px] font-medium">
-            EXPERIMENTAL
+            测试中
           </p>
         </div>
         <div className="flex flex-col gap-2">
@@ -313,9 +313,9 @@ function SettingsTab({
       {/* IMAGE SCALE */}
       <div>
         <div className="flex flex-row gap-1">
-          <p className="text-sm font-medium">IMAGE SCALE</p>
+          <p className="text-sm font-medium">图像比例</p>
           <p className="badge-primary badge text-[10px] font-medium">
-            EXPERIMENTAL
+            测试中
           </p>
         </div>
         <input
@@ -342,7 +342,7 @@ function SettingsTab({
           onClick={copyOnClickHandler}>
           {isCopied ? <span>Copied 📋</span> : <span>Copy 📋</span>}
         </button>
-        <p className="text-sm font-medium">LOGS</p>
+        <p className="text-sm font-medium">日志：</p>
         <code className="rounded-btn relative flex h-52 max-h-52 flex-col gap-3 overflow-y-auto break-all bg-base-200 p-4 text-xs">
           {logData.length === 0 && (
             <p className="text-base-content/70">No logs to show</p>
