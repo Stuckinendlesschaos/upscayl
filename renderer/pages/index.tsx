@@ -55,7 +55,7 @@ const Home = () => {
   useEffect(() => {
     setLoaded(true);
 
-    setVersion(navigator?.userAgent?.match(/Upscayl\/([\d\.]+\d+)/)[1]);
+    setVersion(navigator?.userAgent?.match(/剪佳\/([\d\.]+\d+)/)[1]);
 
     const handleErrors = (data: string) => {
       if (data.includes("invalid gpu")) {
