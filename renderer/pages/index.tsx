@@ -15,7 +15,8 @@ import { modelsListAtom } from '../atoms/modelsListAtom'
 import { batchModeAtom, scaleAtom } from '../atoms/userSettingsAtom'
 import useLog from '../components/hooks/useLog'
 
-import ImagesEditTab from '../components/ImagesEditTab'
+import ImagesEditTab from '../components/tabs/ImagesEditTab'
+import ImagesBackgroundGenerateTab from '../components/tabs/ImagesBackgroundGenerateTab'
 
 const Home = () => {
   // STATES
@@ -50,6 +51,7 @@ const Home = () => {
   const [logData, setLogData] = useAtom(logAtom)
   const [modelOptions, setModelOptions] = useAtom(modelsListAtom)
   const [scale] = useAtom(scaleAtom)
+  
 
   const { logit } = useLog()
 
@@ -57,7 +59,7 @@ const Home = () => {
   useEffect(() => {
     setLoaded(true)
 
-    setVersion(navigator?.userAgent?.match(/Upscayl\/([\d\.]+\d+)/)[1])
+    setVersion(require('../../package.json').version)
 
     const handleErrors = (data: string) => {
       if (data.includes('invalid gpu')) {
@@ -279,14 +281,13 @@ const Home = () => {
 
   const selectImageHandler = async () => {
     resetImagePaths()
-
-    var path = await window.electron.invoke(commands.SELECT_FILE)
-
-    if (path !== null) {
-      logit('📢 Selected Image Path: ', path)
+    var path =  await window.electron.invoke(commands.SELECT_FILE)
+    console.log('1 +++++++++++++++++++++++++++ commands.SELECT_FILE ', path);
+    if (path != null) {
+      logit(' >>>>>>>>>> Selected Image Path: ', path)
       SetImagePath(path)
       var dirname = path.match(/(.*)[\/\\]/)[1] || ''
-      logit('📢 Selected Image Directory: ', dirname)
+      logit(' >>>>>>>>>> Selected Image Directory: ', dirname)
       setOutputPath(dirname)
     }
   }
@@ -577,6 +578,12 @@ const Home = () => {
             selectImageHandler={selectImageHandler}
             imagePath={imagePath}
           ></ImagesEditTab>
+        )}
+        {selectedTab === 3 && (
+          <ImagesBackgroundGenerateTab
+            selectImageHandler={selectImageHandler}
+            imagePath={imagePath}
+          ></ImagesBackgroundGenerateTab>
         )}
 
         <Footer />

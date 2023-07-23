@@ -167,11 +167,13 @@ const defaultModels = [
 //------------------------Select File-----------------------------//
 // ! DONT FORGET TO RESTART THE APP WHEN YOU CHANGE CODE HERE
 ipcMain.handle(commands.SELECT_FILE, async () => {
+  console.log('2 +++++++++++++++++++++++++++ commands.SELECT_FILE ')
   const { canceled, filePaths } = await dialog.showOpenDialog({
     properties: ['openFile', 'multiSelections'],
     title: 'Select Image',
     defaultPath: imagePath
   })
+  console.log('++++++++++++++++ canceled, filePaths ', canceled, filePaths)
 
   if (canceled) {
     logit('❌ File Operation Cancelled')
@@ -198,19 +200,14 @@ ipcMain.handle(commands.SELECT_FILE, async () => {
     })
 
     if (!isValid) {
-      logit('❌ Invalid File Detected')
       const options: MessageBoxOptions = {
         type: 'error',
         title: 'Invalid File',
-        message:
-          "The selected file is not a valid image. Make sure you select a '.png', '.jpg', or '.webp' file."
+        message: "图片格式暂时仅支持 '.png', '.jpg', or '.webp' file."
       }
       dialog.showMessageBoxSync(mainWindow, options)
       return null
     }
-
-    logit('📢 Selected File Path: ', filePaths[0])
-    // CREATE input AND upscaled FOLDER
     return filePaths[0]
   }
 })

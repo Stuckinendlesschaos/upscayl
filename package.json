@@ -4,20 +4,6 @@
   "version": "0.0.2",
   "productName": "Upscayl",
   "homepage": "https://github.com/TGS963/upscayl",
-  "contributors": [
-    {
-      "name": "Nayam Amarshe",
-      "email": "nayam.emikx@aleeas.com",
-      "url": "https://github.com/NayamAmarshe"
-    },
-    {
-      "name": "TGS963",
-      "email": "tgs@963.com",
-      "url": "https://github.com/TGS963"
-    }
-  ],
-  "email": "nayam.emikx@aleeas.com",
-  "license": "AGPL-3.0",
   "description": "剪佳 - Free and Open Source AI Image Upscaler",
   "keywords": [
     "AI",

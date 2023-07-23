@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import commands from '../../electron/commands'
+import commands from '../../../electron/commands'
 
 interface IProps {
   imagePath: string
@@ -42,14 +42,14 @@ function ImagesEditTab({ imagePath, selectImageHandler }: IProps) {
   }
 
   return (
-    <div className="animate-step-in animate flex h-screen flex-col gap-7 overflow-y-auto p-5 overflow-x-hidden">
+    <div className="animate-step-in animate flex h-screen flex-col gap-7 overflow-y-auto overflow-x-hidden p-5">
       <div>
-        <button className="mgr-10 btn-primary btn" onClick={selectImageHandler}>
+        <button className="mgr-10 btn btn-primary" onClick={selectImageHandler}>
           选择图片
         </button>
         {imagePath && (
           <button
-            className=" btn-primary btn"
+            className=" btn btn-primary"
             onClick={addConcept}
             disabled={conceptList.length == 3}
           >
@@ -63,7 +63,7 @@ function ImagesEditTab({ imagePath, selectImageHandler }: IProps) {
           <textarea
             value={imageInfo}
             onChange={handleImageInfoChange}
-            className="input-bordered input w-full max-w-xs"
+            className="input input-bordered w-full max-w-xs"
           />
         </div>
       )}
@@ -77,7 +77,7 @@ function ImagesEditTab({ imagePath, selectImageHandler }: IProps) {
                   name=""
                   id=""
                   onChange={(event) => handleSelectChange(event, index)}
-                  className="select-primary select"
+                  className="select select-primary"
                 >
                   <option value="custom">custom</option>
                   <option value="style">style</option>
@@ -91,7 +91,7 @@ function ImagesEditTab({ imagePath, selectImageHandler }: IProps) {
                   type="text"
                   placeholder="增加想法"
                   itemID="item.value"
-                  className="input-bordered input w-full max-w-xs"
+                  className="input input-bordered w-full max-w-xs"
                 />
               </div>
               <div>
