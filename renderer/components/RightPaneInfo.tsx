@@ -1,10 +1,10 @@
 import React from "react";
 
-function RightPaneInfo({ version, batchMode, isVideo }) {
+function RightPaneInfo({ batchMode, isVideo }) {
   return isVideo ? (
     <>
       <p className="p-5 pb-1 text-lg font-semibold">Select Video to Handle</p>
-      <p className="text-sm">Image-Assistant v{version}</p>
+      <p className="text-sm">Image-Assistant</p>
     </>
   ) : (
     <>
@@ -16,7 +16,7 @@ function RightPaneInfo({ version, batchMode, isVideo }) {
           确保处理的文件不包含PNG、JPG、JPEG和WEBP等不满足格式标准的图片。
         </p>
       )}
-      <p className="text-sm">剪佳 v{version}</p>
+      <p className="text-sm">剪佳 </p>
     </>
   );
 }

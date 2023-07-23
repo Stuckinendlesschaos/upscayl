@@ -1,6 +1,5 @@
-import React from 'react'
-
-function Header({ version }: { version: string }) {
+function Header() {
+  const version = require('../../package.json').version
   return (
     <a target="_blank">
       <div className="flex items-center gap-3 px-5 py-5">
