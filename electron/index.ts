@@ -642,7 +642,7 @@ ipcMain.on(commands.REMOVE_BACKGROUND, async (event, payload) => {
   const fileName = parse(fullfileName).name
   const fileExt = parse(fullfileName).ext
   const imgDate = await getRemoveBgImgData(fullfileName)
-  const outFilePath = join(payload.outputPath, `${fileName}_${new Date().getTime()}${fileExt}`)
+  const outFilePath = join(payload.outputPath, `${fileName}_rmbg_${new Date().getTime()}${fileExt}`)
   await downloadFile(outFilePath, imgDate)
   mainWindow.webContents.send(commands.REMMOVEBG_DONE, outFilePath)
 })
