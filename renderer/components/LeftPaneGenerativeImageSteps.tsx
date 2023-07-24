@@ -17,6 +17,8 @@ interface IProps {
     width: number | null;
     height: number | null;
   };
+  promptMode: boolean;
+  setPromptMode: React.Dispatch<React.SetStateAction<boolean>>;
 //   setSaveImageAs: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -26,6 +28,8 @@ function LeftPaneGenerativeImageSteps({
   imagePath,
   outputPath,
   dimensions,
+  promptMode,
+  setPromptMode,
 }: IProps) {
   // 日志打印 
   const { logit } = useLog();
@@ -35,6 +39,20 @@ function LeftPaneGenerativeImageSteps({
 
   return (
     <div className="animate-step-in animate flex h-screen flex-col gap-7 overflow-y-auto p-5 overflow-x-hidden">
+
+      <div className="flex flex-row items-center gap-2">
+        <input
+          type="checkbox"
+          className="toggle"
+          defaultChecked={promptMode}
+          onClick={() => setPromptMode((oldValue) => !oldValue)}></input>
+        <p
+          className="mr-1 inline-block  cursor-help text-sm"
+          data-tip="激活关键词用于生成式素材">
+          打开关键词
+        </p>
+      </div>
+      
 
       {/* STEP 1 */}
       <div data-tip={imagePath}>

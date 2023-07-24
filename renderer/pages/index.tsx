@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import ProgressBar from "../components/ProgressBar";
 import RightPaneInfo from "../components/RightPaneInfo";
 import ImageOptions from "../components/ImageOptions";
+import PromptOptions from "../components/PromptOptions";
 import LeftPaneImageSteps from "../components/LeftPaneImageSteps";
 import LeftPaneGenerativeImageSteps from "../components/LeftPaneGenerativeImageSteps";
 import Tabs from "../components/Tabs";
@@ -13,7 +14,7 @@ import SettingsTab from "../components/SettingsTab";
 import { useAtom } from "jotai";
 import { logAtom } from "../atoms/logAtom";
 import { modelsListAtom } from "../atoms/modelsListAtom";
-import { batchModeAtom, scaleAtom } from "../atoms/userSettingsAtom";
+import { batchModeAtom, promptModeAtom, scaleAtom } from "../atoms/userSettingsAtom";
 import useLog from "../components/hooks/useLog";
 
 const Home = () => {
@@ -29,6 +30,9 @@ const Home = () => {
   const [loaded, setLoaded] = useState(false);
   const [version, setVersion] = useState("");
   const [batchMode, setBatchMode] = useAtom(batchModeAtom);
+  const [promptMode, setPromptMode] = useAtom(promptModeAtom);
+  const [concept, setConcept] = useState("");
+  const [typeofInput, setTypeofInput] = useState("");
   const [batchFolderPath, setBatchFolderPath] = useState("");
   const [rmbgBatchFolderPath, setRmbgBatchFolderPath] = useState("");
   const [upscaledBatchFolderPath, setUpscaledBatchFolderPath] = useState("");
@@ -261,6 +265,20 @@ const Home = () => {
 
     setVideoPath("");
     setUpscaledVideoPath("");
+  };
+
+  
+  const addConcept = () => {
+    logit("📢 Add concept to generate");
+
+    //add concept的逻辑
+
+  };
+
+  const removeConcept = () => {
+    logit("📢 Remove concept to generate");
+
+    //remove concept的逻辑
   };
 
   // HANDLERS
@@ -644,6 +662,8 @@ const Home = () => {
         {selectedTab === 1 && (
           <LeftPaneGenerativeImageSteps
           progress={progress}
+          promptMode={promptMode}
+          setPromptMode={setPromptMode}
           generativeBgImageHandler={generativeBgImageHandler}
           imagePath={imagePath}
           outputPath={outputPath}
@@ -725,6 +745,17 @@ const Home = () => {
                 resetImagePaths={resetImagePaths}
                 hideZoomOptions={true}
               />
+               <PromptOptions
+                promptMode={promptMode}
+                concept={concept}
+                typeofInput={typeofInput}
+                setPromptMode={setPromptMode}
+                setConcept={setConcept}
+                setTypeofInput={setTypeofInput}
+                addConcept={addConcept}
+                removeConcept={removeConcept}
+                hideZoomOptions={true}
+              />
               <img
                 // src={
                 //   "file://" +
@@ -789,6 +820,17 @@ const Home = () => {
                 setZoomAmount={setZoomAmount}
                 resetImagePaths={resetImagePaths}
               />
+               <PromptOptions
+                promptMode={promptMode}
+                concept={concept}
+                typeofInput={typeofInput}
+                setPromptMode={setPromptMode}
+                setConcept={setConcept}
+                setTypeofInput={setTypeofInput}
+                addConcept={addConcept}
+                removeConcept={removeConcept}
+                hideZoomOptions={true}
+              />
               <ReactCompareSlider
                 itemOne={
                   <>
@@ -848,6 +890,17 @@ const Home = () => {
                 zoomAmount={zoomAmount}
                 setZoomAmount={setZoomAmount}
                 resetImagePaths={resetImagePaths}
+              />
+               <PromptOptions
+                promptMode={promptMode}
+                concept={concept}
+                typeofInput={typeofInput}
+                setPromptMode={setPromptMode}
+                setConcept={setConcept}
+                setTypeofInput={setTypeofInput}
+                addConcept={addConcept}
+                removeConcept={removeConcept}
+                hideZoomOptions={true}
               />
               <ReactCompareSlider
                 itemOne={

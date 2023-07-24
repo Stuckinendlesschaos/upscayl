@@ -212,7 +212,7 @@ function SettingsTab({
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium">SAVE OUTPUT FOLDER (PERMANENTLY)</p>
+        <p className="text-sm font-medium">保存输出文件夹</p>
         <input
           type="checkbox"
           className="toggle-primary toggle"
