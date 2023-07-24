@@ -5,6 +5,7 @@ type TabsProps = {
   setSelectedTab: (tab: number) => void;
 };
 
+// 选项卡总入口
 const Tabs = ({ selectedTab, setSelectedTab }: TabsProps) => {
   return (
     <div className="tabs tabs-boxed mx-auto mb-2">
@@ -16,9 +17,17 @@ const Tabs = ({ selectedTab, setSelectedTab }: TabsProps) => {
         创建
       </a>
       <a
-        className={`tab ${selectedTab === 1 && "tab-active"}`}
+        className={`tab ${selectedTab === 1 && 'tab-active'}`}
         onClick={() => {
-          setSelectedTab(1);
+          setSelectedTab(1)
+        }}
+      >
+        生成
+      </a>
+      <a
+        className={`tab ${selectedTab === 2 && "tab-active"}`}
+        onClick={() => {
+          setSelectedTab(2);
         }}>
         设置
       </a>

@@ -14,7 +14,7 @@ import { format } from "url";
 import fs from "fs";
 
 import { execPath, modelsPath } from "./binaries";
-import { getFileList, getRemoveBgImgData,downloadFile } from './utils/file'
+import { getFileList, getRemoveBgImgData, obtainGenerativeImage, downloadFile } from './utils/file'
 
 // Packages
 import {
@@ -650,7 +650,7 @@ ipcMain.on(commands.FOLDER_UPSCAYL, async (event, payload) => {
 //------------------------Auto-Update Code-----------------------------//
 // ! AUTO UPDATE STUFF
 autoUpdater.on("update-available", ({ releaseNotes, releaseName }) => {
-  const dialogOpts = {
+  const dialogOpts: MessageBoxOptions = {
     type: "info",
     buttons: ["Ok cool"],
     title: "New Upscayl Update",
@@ -660,6 +660,21 @@ autoUpdater.on("update-available", ({ releaseNotes, releaseName }) => {
   };
   logit("📢 Update Available", releaseName, releaseNotes);
   dialog.showMessageBox(dialogOpts).then((returnValue) => {});
+});
+
+autoUpdater.on("update-downloaded", (event) => {
+  const dialogOpts: MessageBoxOptions = {
+    type: "info",
+    buttons: ["Restart", "Later"],
+    title: "New Upscayl Update",
+    message: event.releaseName as string,
+    detail:
+      "A new version has been downloaded. Restart the application to apply the updates.",
+  };
+  logit("📢 Update Downloaded");
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+   
+  });
 });
 
 autoUpdater.on("update-downloaded", (event) => {
@@ -703,6 +718,19 @@ ipcMain.on(commands.FOLDER_REMOVE_BACKGROUND, async (_, payload) => {
       mainWindow.webContents.send(commands.REMMOVEBATCHBG_DONE, outFileDir);
     }
   })
+});
+
+//------------------------ GENERATIVE Image Background-----------------------------//
+ipcMain.on(commands.GENERATIVE_IMAGE_BACKGROUND, async (event, payload) => {
+  // COPY IMAGE TO TMP FOLDER
+  const fullfileName = payload.imagePath;
+  const fileName = parse(fullfileName).name;
+  const fileExt = parse(fullfileName).ext;
+
+  const imgDate = await obtainGenerativeImage(fullfileName)
+  const outFilePath = join(payload.outputPath, `${fileName}_${new Date().getTime()}${fileExt}`)
+  await downloadFile(outFilePath, imgDate)
+  mainWindow.webContents.send(commands.REMMOVEBG_DONE, outFilePath);
 });
 
 //------------------------Video Upscayl-----------------------------//

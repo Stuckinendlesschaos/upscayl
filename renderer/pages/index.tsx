@@ -7,6 +7,7 @@ import ProgressBar from "../components/ProgressBar";
 import RightPaneInfo from "../components/RightPaneInfo";
 import ImageOptions from "../components/ImageOptions";
 import LeftPaneImageSteps from "../components/LeftPaneImageSteps";
+import LeftPaneGenerativeImageSteps from "../components/LeftPaneGenerativeImageSteps";
 import Tabs from "../components/Tabs";
 import SettingsTab from "../components/SettingsTab";
 import { useAtom } from "jotai";
@@ -19,7 +20,8 @@ const Home = () => {
   // STATES
   const [imagePath, SetImagePath] = useState("");
   const [upscaledImagePath, setUpscaledImagePath] = useState("");
-  const [removebgOfImagePath,setremovebgOfImagePath]= useState("");                     
+  const [removebgOfImagePath,setremovebgOfImagePath]= useState("");   
+  const [remove] = useState("");                  
   const [outputPath, setOutputPath] = useState("");
   const [scaleFactor] = useState(4);
   const [progress, setProgress] = useState("");
@@ -441,19 +443,20 @@ const Home = () => {
       if(batchMode){
         console.log("batchFolderPath ", batchFolderPath);
         console.log("commands.FOLDER_REMOVE_BACKGROUND = ", commands.FOLDER_REMOVE_BACKGROUND);
-        await window.electron.send(commands.FOLDER_REMOVE_BACKGROUND, {
+        window.electron.send(commands.FOLDER_REMOVE_BACKGROUND, {
           batchFolderPath,
           outputPath,
           saveImageAs,
         });
       } else{
-        await window.electron.send(commands.REMOVE_BACKGROUND, {
+        window.electron.send(commands.REMOVE_BACKGROUND, {
           imagePath,
           outputPath,
           saveImageAs,
         });
       }
     } else{
+      logit(`📢 No valid material to process`);
       alert(`Please select ${isVideo ? "a video" : "an image"} to rm Bg`);
     }
   };
@@ -470,7 +473,7 @@ const Home = () => {
       setProgress("Hold on...");
 
       if (doubleUpscayl) {
-        await window.electron.send(commands.DOUBLE_UPSCAYL, {
+        window.electron.send(commands.DOUBLE_UPSCAYL, {
           imagePath: removebgOfImagePath.length > 0 ? removebgOfImagePath : imagePath,
           outputPath,
           model,
@@ -520,6 +523,35 @@ const Home = () => {
     }
   };
 
+  const generativeBgImageHandler = async () => {
+
+    logit("📢 Generating Image background");
+
+    //在处理过程中传递的逻辑 ... 
+    if(imagePath !== "" || removebgOfImagePath !== "" || batchFolderPath !== ""){
+      setProgress("Hold on...");
+
+      if (!batchMode) {
+        window.electron.send(commands.GENERATIVE_IMAGE_BACKGROUND, {
+          scaleFactor,
+          imagePath: removebgOfImagePath.length > 0 ? removebgOfImagePath : imagePath,
+          outputPath,
+          model,
+          gpuId: gpuId.length === 0 ? null : gpuId,
+          saveImageAs,
+          scale,
+        });
+        logit("📢 GENERATIVE IMAGE BACKGROUND");
+      } else {
+        logit("📢 Folders' generative background is not currently supported ");
+      }
+    }
+    else {
+      logit("📢 No valid image to process ");
+      alert(`Please select ${isVideo ? "a video" : "an image"} to gen Bg`);
+    }
+  }
+
   const stopHandler = () => {
     window.electron.send(commands.STOP);
     logit("📢 Stopping Upscayl");
@@ -545,7 +577,7 @@ const Home = () => {
       <div className="flex h-screen w-128 flex-col rounded-r-3xl bg-base-100">
         {/* HEADER */}
         <Header version={version} />
-
+        {/* Tab组件的layout布局实现，广泛用于菜单栏 */}
         <Tabs selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
         {/* <div className="flex items-center justify-center gap-2 pb-4 font-medium">
           <p>Image</p>
@@ -610,6 +642,15 @@ const Home = () => {
         )}
 
         {selectedTab === 1 && (
+          <LeftPaneGenerativeImageSteps
+          progress={progress}
+          generativeBgImageHandler={generativeBgImageHandler}
+          imagePath={imagePath}
+          outputPath={outputPath}
+          dimensions={dimensions}
+          />
+        )}
+        {selectedTab === 2 && (
           <SettingsTab
             progress={progress}
             selectImageHandler={selectImageHandler}
