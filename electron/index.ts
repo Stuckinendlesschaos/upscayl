@@ -14,7 +14,7 @@ import { format } from 'url'
 import fs from 'fs'
 
 import { execPath, modelsPath } from './binaries'
-import { getFileList, getRemoveBgImgData, downloadFile } from './utils/file'
+import { getFileList, getRemoveBgImgData, downloadFile, getAddBgImgData } from './utils/file'
 
 // Packages
 import { BrowserWindow, app, ipcMain, dialog, shell, MessageBoxOptions } from 'electron'
@@ -661,6 +661,21 @@ ipcMain.on(commands.FOLDER_REMOVE_BACKGROUND, async (_, payload) => {
       mainWindow.webContents.send(commands.REMMOVEBATCHBG_DONE, outFileDir)
     }
   })
+})
+
+//------------------------add Background-----------------------------//
+ipcMain.on(commands.ADD_BG_DONE, async (event, payload) => {
+  // COPY IMAGE TO TMP FOLDER
+  const fullfileName = payload.imagePath
+  const fileName = parse(fullfileName).name
+  const fileExt = parse(fullfileName).ext
+  const imgDate = await getAddBgImgData(payload)
+  const outFilePath = join(
+    payload.outputPath,
+    `${fileName}_addbg_${new Date().getTime()}${fileExt}`
+  )
+  await downloadFile(outFilePath, imgDate)
+  mainWindow.webContents.send(commands.ADD_BG_DONE, outFilePath)
 })
 
 //------------------------Video Upscayl-----------------------------//

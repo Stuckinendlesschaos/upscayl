@@ -4,13 +4,17 @@ import commands from '../../../electron/commands'
 interface IProps {
   imagePath: string
   selectImageHandler: () => Promise<void>
+  addBackgroundHandler: (promptInfo) => Promise<void>
 }
 
-const ImagesBackgroundGenerateTab = ({ imagePath, selectImageHandler }: IProps) => {
+const ImagesBackgroundGenerateTab = ({
+  imagePath,
+  selectImageHandler,
+  addBackgroundHandler
+}: IProps) => {
   const [promptInfo, setPromptInfo] = useState({
-    prompt: '',
-    negativePrompt: '',
-    imageFile: '',
+    prompt: 'A beautiful sunset',
+    negativePrompt: 'No palm trees',
     seed: 789645120
   })
 
@@ -26,6 +30,7 @@ const ImagesBackgroundGenerateTab = ({ imagePath, selectImageHandler }: IProps) 
 
   const generateBackground = async () => {
     console.log('generateBackground ', promptInfo)
+    addBackgroundHandler(promptInfo)
   }
 
   return (

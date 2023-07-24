@@ -2,10 +2,10 @@ import { useState, useEffect, useCallback } from 'react'
 import { useAtom } from 'jotai'
 import commands from '../../../electron/commands'
 import { batchModeAtom, scaleAtom } from '../../atoms/userSettingsAtom'
-import { 
-  imagePathAtom, 
-  upscaledImagePathAtom, 
-  removeBgImagePathAtom, 
+import {
+  imagePathAtom,
+  upscaledImagePathAtom,
+  removeBgImagePathAtom,
   outputPathAtom,
   batchFolderPathAtom,
   upscaledBatchFolderPathAtom,
@@ -16,14 +16,13 @@ import {
   dimensionsAtom
 } from '../../atoms/filePathAtom'
 
-import {allowedFileTypes,allowedVideoFileTypes} from '../../const/allowedTypes'
-import ProgressBar from "../ProgressBar"
-import RightPaneInfo from "../RightPaneInfo"
-import ImageOptions from "../ImageOptions"
+import { allowedFileTypes, allowedVideoFileTypes } from '../../const/allowedTypes'
+import ProgressBar from '../ProgressBar'
+import RightPaneInfo from '../RightPaneInfo'
+import ImageOptions from '../ImageOptions'
 import { ReactCompareSlider } from 'react-compare-slider'
 
-const RightPane = ()=>{
-
+const RightPane = () => {
   const [batchMode, setBatchMode] = useAtom(batchModeAtom)
   const [scale] = useAtom(scaleAtom)
 
@@ -77,6 +76,12 @@ const RightPane = ()=>{
       // addToLog(data);
     })
 
+    window.electron.on(commands.ADD_BG_DONE, (_, data: string) => {
+      setProgress('')
+      setRemoveBgImagePath(data)
+      // addToLog(data);
+    })
+
     // 批处理背景移除并且下载完成 重新指定文件目录（移除背景后的rmbg目录）
     window.electron.on(commands.REMMOVEBATCHBG_DONE, (_, data: string) => {
       setProgress('')
@@ -91,7 +96,6 @@ const RightPane = ()=>{
         setProgress(data)
       }
       handleErrors(data)
-     
     })
 
     // FOLDER UPSCAYL PROGRESS
@@ -100,7 +104,6 @@ const RightPane = ()=>{
         setProgress(data)
       }
       handleErrors(data)
-     
     })
 
     // DOUBLE UPSCAYL PROGRESS
@@ -112,7 +115,6 @@ const RightPane = ()=>{
         setProgress(data)
       }
       handleErrors(data)
-      
     })
 
     // VIDEO UPSCAYL PROGRESS
@@ -121,21 +123,18 @@ const RightPane = ()=>{
         setProgress(data)
       }
       handleErrors(data)
-      
     })
 
     // UPSCAYL DONE
     window.electron.on(commands.UPSCAYL_DONE, (_, data: string) => {
       setProgress('')
       setUpscaledImagePath(data)
-
     })
 
     // FOLDER UPSCAYL DONE
     window.electron.on(commands.FOLDER_UPSCAYL_DONE, (_, data: string) => {
       setProgress('')
       setUpscaledBatchFolderPath(data)
-
     })
 
     // DOUBLE UPSCAYL DONE
@@ -143,19 +142,16 @@ const RightPane = ()=>{
       setProgress('')
       setDoubleUpscaylCounter(0)
       setUpscaledImagePath(data)
-
     })
 
     // VIDEO UPSCAYL DONE
     window.electron.on(commands.UPSCAYL_VIDEO_DONE, (_, data: string) => {
       setProgress('')
       setUpscaledVideoPath(data)
-
     })
 
     // CUSTOM FOLDER LISTENER
     window.electron.on(commands.CUSTOM_MODEL_FILES_LIST, (_, data: string[]) => {
-   
       const newModelOptions = data.map((model) => {
         return {
           value: model,
@@ -177,7 +173,6 @@ const RightPane = ()=>{
 
     if (customModelsPath !== null) {
       window.electron.send(commands.GET_MODELS_LIST, customModelsPath)
-
     }
   }, [])
 
@@ -199,8 +194,6 @@ const RightPane = ()=>{
 
   useEffect(() => {
     if (imagePath.length > 0 && !isVideo) {
-
-
       const extension = imagePath.toLocaleLowerCase().split('.').pop()
 
       if (!allowedFileTypes.includes(extension.toLowerCase())) {
@@ -307,97 +300,153 @@ const RightPane = ()=>{
     setUpscaledVideoPath('')
   }
 
-    return (<div
-        className="relative flex h-screen w-full flex-col items-center justify-center"
-        onDrop={(e) => handleDrop(e)}
-        onDragOver={(e) => handleDragOver(e)}
-        onDragEnter={(e) => handleDragEnter(e)}
-        onDragLeave={(e) => handleDragLeave(e)}
-        onPaste={(e) => handlePaste(e)}
-      >
-        {progress.length > 0 &&
+  return (
+    <div
+      className="relative flex h-screen w-full flex-col items-center justify-center"
+      onDrop={(e) => handleDrop(e)}
+      onDragOver={(e) => handleDragOver(e)}
+      onDragEnter={(e) => handleDragEnter(e)}
+      onDragLeave={(e) => handleDragLeave(e)}
+      onPaste={(e) => handlePaste(e)}
+    >
+      {progress.length > 0 &&
+      upscaledImagePath.length === 0 &&
+      upscaledBatchFolderPath.length === 0 &&
+      upscaledVideoPath.length === 0 ? (
+        <ProgressBar
+          progress={progress}
+          doubleUpscaylCounter={doubleUpscaylCounter}
+          stopHandler={stopHandler}
+        />
+      ) : null}
+
+      {/* DEFAULT PANE INFO */}
+      {((!isVideo &&
+        !batchMode &&
+        imagePath.length === 0 &&
+        removeBgImagePath.length === 0 &&
+        upscaledImagePath.length === 0) ||
+        (!isVideo &&
+          batchMode &&
+          batchFolderPath.length === 0 &&
+          upscaledBatchFolderPath.length === 0) ||
+        (isVideo && videoPath.length === 0 && upscaledVideoPath.length === 0)) && (
+        <RightPaneInfo batchMode={batchMode} isVideo={isVideo} />
+      )}
+
+      {/* SHOW SELECTED IMAGE */}
+      {!batchMode &&
+        !isVideo &&
+        removeBgImagePath.length === 0 &&
         upscaledImagePath.length === 0 &&
-        upscaledBatchFolderPath.length === 0 &&
-        upscaledVideoPath.length === 0 ? (
-          <ProgressBar
-            progress={progress}
-            doubleUpscaylCounter={doubleUpscaylCounter}
-            stopHandler={stopHandler}
-          />
-        ) : null}
-
-        {/* DEFAULT PANE INFO */}
-        {((!isVideo &&
-          !batchMode &&
-          imagePath.length === 0 &&
-          removeBgImagePath.length === 0 &&
-          upscaledImagePath.length === 0) ||
-          (!isVideo &&
-            batchMode &&
-            batchFolderPath.length === 0 &&
-            upscaledBatchFolderPath.length === 0) ||
-          (isVideo && videoPath.length === 0 && upscaledVideoPath.length === 0)) && (
-          <RightPaneInfo batchMode={batchMode} isVideo={isVideo} />
-        )}
-
-        {/* SHOW SELECTED IMAGE */}
-        {!batchMode &&
-          !isVideo &&
-          removeBgImagePath.length === 0 &&
-          upscaledImagePath.length === 0 &&
-          imagePath.length > 0 && (
-            <>
-              <ImageOptions
-                zoomAmount={zoomAmount}
-                setZoomAmount={setZoomAmount}
-                resetImagePaths={resetImagePaths}
-                hideZoomOptions={true}
-              />
-              <img
-                // src={
-                //   "file://" +
-                //   `${
-                //     upscaledImagePath
-                //       ? formatPath(upscaledImagePath)
-                //       : formatPath(imagePath)
-                //   }`
-                // }
-                src={'file://' + `${upscaledImagePath ? upscaledImagePath : imagePath}`}
-                onLoad={(e: any) => {
-                  setDimensions({
-                    width: e.target.naturalWidth,
-                    height: e.target.naturalHeight
-                  })
-                }}
-                draggable="false"
-                alt=""
-                className={`h-full w-full bg-[#1d1c23] object-contain`}
-              />
-            </>
-          )}
-
-        {/* BATCH UPSCALE SHOW SELECTED FOLDER */}
-        {batchMode && upscaledBatchFolderPath.length === 0 && batchFolderPath.length > 0 && (
-          <p className="select-none font-bold text-neutral-50">
-            Selected folder: {batchFolderPath}
-          </p>
-        )}
-
-        {/* BATCH UPSCALE DONE INFO */}
-        {batchMode && upscaledBatchFolderPath.length > 0 && (
+        imagePath.length > 0 && (
           <>
-            <p className="select-none py-4 font-bold text-neutral-50">All done!</p>
-            <button
-              className="bg-gradient-blue rounded-lg p-3 font-medium text-white/90 transition-colors"
-              onClick={openFolderHandler}
-            >
-              Open Upscayled Folder
-            </button>
+            <ImageOptions
+              zoomAmount={zoomAmount}
+              setZoomAmount={setZoomAmount}
+              resetImagePaths={resetImagePaths}
+              hideZoomOptions={true}
+            />
+            <img
+              // src={
+              //   "file://" +
+              //   `${
+              //     upscaledImagePath
+              //       ? formatPath(upscaledImagePath)
+              //       : formatPath(imagePath)
+              //   }`
+              // }
+              src={'file://' + `${upscaledImagePath ? upscaledImagePath : imagePath}`}
+              onLoad={(e: any) => {
+                setDimensions({
+                  width: e.target.naturalWidth,
+                  height: e.target.naturalHeight
+                })
+              }}
+              draggable="false"
+              alt=""
+              className={`h-full w-full bg-[#1d1c23] object-contain`}
+            />
           </>
         )}
 
-        {/* COMPARISON SLIDER */}
-        {!batchMode && !isVideo && imagePath.length > 0 && upscaledImagePath.length > 0 && (
+      {/* BATCH UPSCALE SHOW SELECTED FOLDER */}
+      {batchMode && upscaledBatchFolderPath.length === 0 && batchFolderPath.length > 0 && (
+        <p className="select-none font-bold text-neutral-50">Selected folder: {batchFolderPath}</p>
+      )}
+
+      {/* BATCH UPSCALE DONE INFO */}
+      {batchMode && upscaledBatchFolderPath.length > 0 && (
+        <>
+          <p className="select-none py-4 font-bold text-neutral-50">All done!</p>
+          <button
+            className="bg-gradient-blue rounded-lg p-3 font-medium text-white/90 transition-colors"
+            onClick={openFolderHandler}
+          >
+            Open Upscayled Folder
+          </button>
+        </>
+      )}
+
+      {/* COMPARISON SLIDER */}
+      {!batchMode && !isVideo && imagePath.length > 0 && upscaledImagePath.length > 0 && (
+        <>
+          <ImageOptions
+            zoomAmount={zoomAmount}
+            setZoomAmount={setZoomAmount}
+            resetImagePaths={resetImagePaths}
+          />
+          <ReactCompareSlider
+            itemOne={
+              <>
+                <p className="absolute bottom-1 left-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
+                  Original
+                </p>
+
+                <img
+                  src={'file://' + `${removeBgImagePath ? removeBgImagePath : imagePath}`}
+                  // src={"file:///" + formatPath(imagePath)}
+                  alt="Original"
+                  onMouseMove={handleMouseMove}
+                  style={{
+                    objectFit: 'contain',
+                    backgroundPosition: '0% 0%',
+                    transformOrigin: backgroundPosition
+                  }}
+                  className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
+                />
+              </>
+            }
+            itemTwo={
+              <>
+                <p className="absolute bottom-1 right-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
+                  Upscayled
+                </p>
+                <img
+                  // src={"file://" + formatPath(upscaledImagePath)}
+                  src={'file://' + upscaledImagePath}
+                  alt="Upscayl"
+                  style={{
+                    objectFit: 'contain',
+                    backgroundPosition: '0% 0%',
+                    transformOrigin: backgroundPosition
+                  }}
+                  onMouseMove={handleMouseMove}
+                  className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
+                />
+              </>
+            }
+            className="group h-screen"
+          />
+        </>
+      )}
+
+      {/* COMPARISON SLIDER */}
+      {!batchMode &&
+        !isVideo &&
+        imagePath.length > 0 &&
+        removeBgImagePath.length > 0 &&
+        upscaledImagePath.length === 0 && (
           <>
             <ImageOptions
               zoomAmount={zoomAmount}
@@ -412,8 +461,7 @@ const RightPane = ()=>{
                   </p>
 
                   <img
-                    src={'file://' + `${removeBgImagePath ? removeBgImagePath : imagePath}`}
-                    // src={"file:///" + formatPath(imagePath)}
+                    src={'file://' + imagePath}
                     alt="Original"
                     onMouseMove={handleMouseMove}
                     style={{
@@ -428,12 +476,11 @@ const RightPane = ()=>{
               itemTwo={
                 <>
                   <p className="absolute bottom-1 right-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
-                    Upscayled
+                    BgRemoved
                   </p>
                   <img
-                    // src={"file://" + formatPath(upscaledImagePath)}
-                    src={'file://' + upscaledImagePath}
-                    alt="Upscayl"
+                    src={'file://' + removeBgImagePath}
+                    alt="BgRemoved"
                     style={{
                       objectFit: 'contain',
                       backgroundPosition: '0% 0%',
@@ -449,67 +496,13 @@ const RightPane = ()=>{
           </>
         )}
 
-        {/* COMPARISON SLIDER */}
-        {!batchMode &&
-          !isVideo &&
-          imagePath.length > 0 &&
-          removeBgImagePath.length > 0 &&
-          upscaledImagePath.length === 0 && (
-            <>
-              <ImageOptions
-                zoomAmount={zoomAmount}
-                setZoomAmount={setZoomAmount}
-                resetImagePaths={resetImagePaths}
-              />
-              <ReactCompareSlider
-                itemOne={
-                  <>
-                    <p className="absolute bottom-1 left-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
-                      Original
-                    </p>
-
-                    <img
-                      src={'file://' + imagePath}
-                      alt="Original"
-                      onMouseMove={handleMouseMove}
-                      style={{
-                        objectFit: 'contain',
-                        backgroundPosition: '0% 0%',
-                        transformOrigin: backgroundPosition
-                      }}
-                      className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
-                    />
-                  </>
-                }
-                itemTwo={
-                  <>
-                    <p className="absolute bottom-1 right-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
-                      BgRemoved
-                    </p>
-                    <img
-                      src={'file://' + removeBgImagePath}
-                      alt="BgRemoved"
-                      style={{
-                        objectFit: 'contain',
-                        backgroundPosition: '0% 0%',
-                        transformOrigin: backgroundPosition
-                      }}
-                      onMouseMove={handleMouseMove}
-                      className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
-                    />
-                  </>
-                }
-                className="group h-screen"
-              />
-            </>
-          )}
-
-        {isVideo && videoPath.length > 0 && upscaledVideoPath.length === 0 && (
-          <video autoPlay controls className="m-10 w-11/12 rounded-2xl">
-            <source src={'file://' + videoPath} type="video/mp4" />
-          </video>
-        )}
-      </div>)
+      {isVideo && videoPath.length > 0 && upscaledVideoPath.length === 0 && (
+        <video autoPlay controls className="m-10 w-11/12 rounded-2xl">
+          <source src={'file://' + videoPath} type="video/mp4" />
+        </video>
+      )}
+    </div>
+  )
 }
 
 export default RightPane

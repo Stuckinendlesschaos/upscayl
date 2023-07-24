@@ -121,6 +121,21 @@ const LeftBar = () => {
     }
   }
 
+  const addBackgroundHandler = async (promptInfo) => {
+    setRemoveBgImagePath('')
+    if (imagePath !== '') {
+      setProgress('Waiting a minute....')
+      await window.electron.send(commands.ADD_BG_DONE, {
+        ...promptInfo,
+        imagePath,
+        outputPath,
+        saveImageAs
+      })
+    } else {
+      alert(`Please select ${isVideo ? 'a video' : 'an image'} to rm Bg`)
+    }
+  }
+
   const upscaylHandler = async () => {
     if (isVideo) {
       setUpscaledVideoPath('')
@@ -214,6 +229,28 @@ const LeftBar = () => {
     setUpscaledVideoPath('')
   }
 
+  useEffect(() => {
+    if (imagePath.length > 0 && !isVideo) {
+      const extension = imagePath.toLocaleLowerCase().split('.').pop()
+
+      if (!allowedFileTypes.includes(extension.toLowerCase())) {
+        alert('Please select an image')
+        resetImagePaths()
+      }
+    } else if (videoPath.length > 0 && isVideo) {
+      const filePath = videoPath
+
+      const extension = videoPath.toLocaleLowerCase().split('.').pop()
+
+      if (!allowedVideoFileTypes.includes(extension.toLowerCase())) {
+        alert('Please select an MP4, WebM or MKV video')
+        resetImagePaths()
+      }
+    } else {
+      resetImagePaths()
+    }
+  }, [imagePath, videoPath])
+
   return (
     <div className="flex h-screen w-128 flex-col bg-base-100">
       <Header />
@@ -272,6 +309,7 @@ const LeftBar = () => {
         <ImagesBackgroundGenerateTab
           selectImageHandler={selectImageHandler}
           imagePath={imagePath}
+          addBackgroundHandler={addBackgroundHandler}
         ></ImagesBackgroundGenerateTab>
       )}
 
