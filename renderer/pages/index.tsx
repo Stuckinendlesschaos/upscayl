@@ -31,6 +31,8 @@ const Home = () => {
   const [version, setVersion] = useState("");
   const [batchMode, setBatchMode] = useAtom(batchModeAtom);
   const [promptMode, setPromptMode] = useAtom(promptModeAtom);
+  const [prompt,setPrompt] = useState("");
+  const [negativePrompt,setNegativePrompt] = useState("");
   const [concept, setConcept] = useState("");
   const [typeofInput, setTypeofInput] = useState("");
   const [batchFolderPath, setBatchFolderPath] = useState("");
@@ -267,24 +269,6 @@ const Home = () => {
     setUpscaledVideoPath("");
   };
 
-  // const setConcept = (e) => {
-
-  // }
-
-  
-  const addConcept = () => {
-    logit("📢 Add concept to generate");
-
-    //add concept的逻辑
-
-  };
-
-  const removeConcept = () => {
-    logit("📢 Remove concept to generate");
-
-    //remove concept的逻辑
-  };
-
   // HANDLERS
   const handleMouseMove = useCallback((e: any) => {
     const { left, top, width, height } = e.target.getBoundingClientRect();
@@ -451,7 +435,6 @@ const Home = () => {
     }
   };
 
-  //TODO: invoke the events 
   const bgRemoveHandler = async () => {
     if (isVideo) {
       setRemovebgOfVideoPath("");
@@ -545,6 +528,26 @@ const Home = () => {
     }
   };
 
+// ------------------------------生成式函数开关----------------------------------- 
+ const addConcept = () => {
+    logit("📢 Add concept to generate");
+
+    //add concept的逻辑
+    setPrompt(concept);
+    localStorage.setItem("prompt", prompt);
+    
+
+  };
+
+  const removeConcept = () => {
+    logit("📢 Remove concept to generate");
+
+    //remove concept的逻辑
+    setNegativePrompt(concept);
+    localStorage.setItem("prompt", prompt);
+  };
+
+
   const generativeBgImageHandler = async () => {
 
     logit("📢 Generating Image background");
@@ -558,6 +561,8 @@ const Home = () => {
           scaleFactor,
           imagePath: removebgOfImagePath,
           outputPath,
+          prompt,
+          negativePrompt,
           model,
           gpuId: gpuId.length === 0 ? null : gpuId,
           saveImageAs,
@@ -583,7 +588,7 @@ const Home = () => {
       setProgress("Hold on...");
 
       if (!batchMode) {
-        window.electron.send(commands.GENERATIVE_IMAGE_BACKGROUND, {
+        window.electron.send(commands.GENERATIVE_PARTIAL_CONTENT, {
           scaleFactor,
           imagePath: removebgOfImagePath.length > 0 ? removebgOfImagePath : imagePath,
           outputPath,
@@ -694,14 +699,18 @@ const Home = () => {
 
         {selectedTab === 1 && (
           <LeftPaneGenerativeImageSteps
-          progress={progress}
-          promptMode={promptMode}
-          setPromptMode={setPromptMode}
-          generativeBgImageHandler={generativeBgImageHandler}
-          generativePartialImageHandler={generativePartialImageHandler}
-          imagePath={imagePath}
-          outputPath={outputPath}
-          dimensions={dimensions}
+            progress={progress}
+            promptMode={promptMode}
+            prompt={prompt}
+            negativePrompt={negativePrompt}
+            setPromptMode={setPromptMode}
+            setPrompt={setPrompt}
+            setNegativePrompt={setNegativePrompt}
+            generativeBgImageHandler={generativeBgImageHandler}
+            generativePartialImageHandler={generativePartialImageHandler}
+            imagePath={imagePath}
+            outputPath={outputPath}
+            dimensions={dimensions}
           />
         )}
         {selectedTab === 2 && (
@@ -780,15 +789,15 @@ const Home = () => {
                 hideZoomOptions={true}
               />
                <PromptOptions
-                promptMode={promptMode}
-                concept={concept}
-                typeofInput={typeofInput}
-                setPromptMode={setPromptMode}
-                setConcept={setConcept}
-                setTypeofInput={setTypeofInput}
-                addConcept={addConcept}
-                removeConcept={removeConcept}
-                hideZoomOptions={true}
+                  promptMode={promptMode}
+                  concept={concept}
+                  typeofInput={typeofInput}
+                  setPromptMode={setPromptMode}
+                  setConcept={setConcept}
+                  setTypeofInput={setTypeofInput}
+                  addConcept={addConcept}
+                  removeConcept={removeConcept}
+                  hideZoomOptions={true}
               />
               <img
                 // src={
@@ -855,15 +864,15 @@ const Home = () => {
                 resetImagePaths={resetImagePaths}
               />
                <PromptOptions
-                promptMode={promptMode}
-                concept={concept}
-                typeofInput={typeofInput}
-                setPromptMode={setPromptMode}
-                setConcept={setConcept}
-                setTypeofInput={setTypeofInput}
-                addConcept={addConcept}
-                removeConcept={removeConcept}
-                hideZoomOptions={true}
+                  promptMode={promptMode}
+                  concept={concept}
+                  typeofInput={typeofInput}
+                  setPromptMode={setPromptMode}
+                  setConcept={setConcept}
+                  setTypeofInput={setTypeofInput}
+                  addConcept={addConcept}
+                  removeConcept={removeConcept}
+                  hideZoomOptions={true}
               />
               <ReactCompareSlider
                 itemOne={
@@ -926,15 +935,16 @@ const Home = () => {
                 resetImagePaths={resetImagePaths}
               />
                <PromptOptions
-                promptMode={promptMode}
-                concept={concept}
-                typeofInput={typeofInput}
-                setPromptMode={setPromptMode}
-                setConcept={setConcept}
-                setTypeofInput={setTypeofInput}
-                addConcept={addConcept}
-                removeConcept={removeConcept}
-                hideZoomOptions={true}
+                  promptMode={promptMode}
+                  concept={concept}
+                  typeofInput={typeofInput}
+                  // addConceptEvent={addConceptEvent}
+                  setPromptMode={setPromptMode}
+                  setConcept={setConcept}
+                  setTypeofInput={setTypeofInput}
+                  addConcept={addConcept}
+                  removeConcept={removeConcept}
+                  hideZoomOptions={true}
               />
               <ReactCompareSlider
                 itemOne={

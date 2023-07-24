@@ -65,6 +65,39 @@ export const getRemoveBgImgData = (imagePath) =>{
   })
 }
 
+export const getAddBgImgData = (imagePath) => {
+    return new Promise((resolve,reject) => {
+        const data = new FormData()
+        data.append('image', fs.createReadStream(imagePath))
+        const config = {
+            method: 'post',
+            url: 'https://pixian.ai/api/v1/remove-background',
+            responseType: 'arraybuffer',
+            headers: {
+            Authorization:
+                'Basic cHhkOWlsN2tjeWE1cWZlOmc5bWdxdWhpMjM4OWw3aXQxZzd0anRrNjhzcHB0OHMwam9wNHZ1ZjR0aWh0c3Y0OTc5YWI=',
+            Accept: '*/*',
+            Host: 'pixian.ai',
+            Connection: 'keep-alive',
+            'Content-Type':
+                'multipart/form-data; boundary=--------------------------770839930141001909509711',
+            // @ts-ignore
+            //   ...data.getHeaders(),
+            },
+            data: data,
+        }
+        // @ts-ignore
+        axios(config).then((response) => {
+            const imgData = Buffer.from(response.data, 'base64') //Buffer编码
+            resolve(imgData)
+        })
+        .catch((error) => {
+            console.log('axios error >>>>>> ', error)
+            reject("")
+        })
+      })
+  }
+
 export const obtainGenerativeImage = (imagePath) => {
     return new Promise((resolve,reject) => {
         const data = new FormData()

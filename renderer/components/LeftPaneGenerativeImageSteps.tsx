@@ -19,7 +19,13 @@ interface IProps {
     height: number | null;
   };
   promptMode: boolean;
+  prompt: string;
+  negativePrompt: string;
   setPromptMode: React.Dispatch<React.SetStateAction<boolean>>;
+  setPrompt: React.Dispatch<React.SetStateAction<string>>;
+  setNegativePrompt: React.Dispatch<React.SetStateAction<string>>;
+  // setPrompt: (value: string) => string;
+  // setNegativePrompt: (value: string) => string;
 //   setSaveImageAs: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -31,7 +37,11 @@ function LeftPaneGenerativeImageSteps({
   outputPath,
   dimensions,
   promptMode,
+  prompt,
+  negativePrompt,
   setPromptMode,
+  setPrompt,
+  setNegativePrompt,
 }: IProps) {
   // 日志打印 
   const { logit } = useLog();
@@ -63,12 +73,40 @@ function LeftPaneGenerativeImageSteps({
             测试中
         </p>
         </div>
+        
+        {/* prompt 关键词显示 */}
+        {prompt.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-medium">正向关键词： </p>
+          <input 
+            style={{backgroundColor:'yellow'}}
+            type="text"
+            className="input w-full max-w-xs"
+            value={prompt}
+            readOnly={true}
+          />
+          </div>)}
+
+        {/* negativePrompt 关键词显示 */}
+        {negativePrompt.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-medium">反向关键词： </p>
+          <input
+            style={{backgroundColor:'gray'}}
+            type="text"
+            className="input w-full max-w-xs"
+            value={negativePrompt}
+            readOnly={true}
+          />
+          </div>)}
+        <div className="flex flex-col items-start gap-2">
         <button
           className="btn-accent btn"
           onClick={generativeBgImageHandler}
           disabled={progress.length === 20}>
           {progress.length === 20 ? "生成背景中⏳" : "生成背景"}
         </button>
+        </div>
       </div>
 
       {/* 选项卡 2 */}
