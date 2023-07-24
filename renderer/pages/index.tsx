@@ -267,6 +267,10 @@ const Home = () => {
     setUpscaledVideoPath("");
   };
 
+  // const setConcept = (e) => {
+
+  // }
+
   
   const addConcept = () => {
     logit("📢 Add concept to generate");
@@ -546,6 +550,35 @@ const Home = () => {
     logit("📢 Generating Image background");
 
     //在处理过程中传递的逻辑 ... 
+    if(removebgOfImagePath !== "" || batchFolderPath !== ""){
+      setProgress("Hold on...");
+
+      if (!batchMode) {
+        window.electron.send(commands.GENERATIVE_IMAGE_BACKGROUND, {
+          scaleFactor,
+          imagePath: removebgOfImagePath,
+          outputPath,
+          model,
+          gpuId: gpuId.length === 0 ? null : gpuId,
+          saveImageAs,
+          scale,
+        });
+        logit("📢 GENERATIVE IMAGE BACKGROUND Done!");
+      } else {
+        logit("📢 Folders' generative background is not currently supported ");
+      }
+    }
+    else {
+      logit("📢 No valid image to process");
+      alert(`Please select ${isVideo ? "a video" : "an transparent image"} to generate bg`);
+    }
+  }
+
+  const generativePartialImageHandler = async () => {
+
+    logit("📢 Generating Patrtial Content For Image");
+
+    //在处理过程中传递的逻辑 ... 
     if(imagePath !== "" || removebgOfImagePath !== "" || batchFolderPath !== ""){
       setProgress("Hold on...");
 
@@ -559,14 +592,14 @@ const Home = () => {
           saveImageAs,
           scale,
         });
-        logit("📢 GENERATIVE IMAGE BACKGROUND");
+        logit("📢 GENERATIVE Partial Content Done!");
       } else {
-        logit("📢 Folders' generative background is not currently supported ");
+        logit("📢 Folders' generative partial content is not currently supported ");
       }
     }
     else {
-      logit("📢 No valid image to process ");
-      alert(`Please select ${isVideo ? "a video" : "an image"} to gen Bg`);
+      logit("📢 No valid image to process");
+      alert(`Please select ${isVideo ? "a video" : "an image"} to generate partial content`);
     }
   }
 
@@ -665,6 +698,7 @@ const Home = () => {
           promptMode={promptMode}
           setPromptMode={setPromptMode}
           generativeBgImageHandler={generativeBgImageHandler}
+          generativePartialImageHandler={generativePartialImageHandler}
           imagePath={imagePath}
           outputPath={outputPath}
           dimensions={dimensions}

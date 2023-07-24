@@ -11,6 +11,7 @@ import batchMode from "./LeftPaneImageSteps";
 interface IProps {
   progress: string;
   generativeBgImageHandler: () => Promise<void>;
+  generativePartialImageHandler: () => Promise<void>;
   imagePath: string;
   outputPath: string;
   dimensions: {
@@ -25,6 +26,7 @@ interface IProps {
 function LeftPaneGenerativeImageSteps({
   progress,
   generativeBgImageHandler,
+  generativePartialImageHandler,
   imagePath,
   outputPath,
   dimensions,
@@ -53,8 +55,7 @@ function LeftPaneGenerativeImageSteps({
         </p>
       </div>
       
-
-      {/* STEP 1 */}
+      {/* 选项卡 1 */}
       <div data-tip={imagePath}>
       <div className="flex flex-row gap-1">
         <p className="step-heading">选项卡 1</p>
@@ -63,10 +64,26 @@ function LeftPaneGenerativeImageSteps({
         </p>
         </div>
         <button
-          className="btn-primary btn"
+          className="btn-accent btn"
           onClick={generativeBgImageHandler}
           disabled={progress.length === 20}>
           {progress.length === 20 ? "生成背景中⏳" : "生成背景"}
+        </button>
+      </div>
+
+      {/* 选项卡 2 */}
+      <div data-tip={imagePath}>
+      <div className="flex flex-row gap-1">
+        <p className="step-heading">选项卡 2</p>
+        <p className="badge-primary badge text-[10px] font-medium">
+            测试中
+        </p>
+        </div>
+        <button
+          className="btn-accent btn"
+          onClick={generativePartialImageHandler}
+          disabled={progress.length === 20}>
+          {progress.length === 20 ? "局部生成中⏳" : "局部生成"}
         </button>
       </div>
     
