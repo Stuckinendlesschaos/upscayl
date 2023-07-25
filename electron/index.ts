@@ -698,9 +698,9 @@ ipcMain.on(commands.REMOVE_BACKGROUND, async (event, payload) => {
   const fullfileName = payload.imagePath;
   const fileName = parse(fullfileName).name;
   const fileExt = parse(fullfileName).ext;
+  const outputPath = payload.outputPath;
   const imgDate = await getRemoveBgImgData(fullfileName);
-  const outFilePath = join(payload.outputPath, `${fileName}_${new Date().getTime()}${fileExt}`);
-  event.reply(event,"pong");
+  const outFilePath = join(outputPath, `${fileName}_${new Date().getTime()}${fileExt}`);
   await downloadFile(outFilePath, imgDate);
   mainWindow.webContents.send(commands.REMMOVEBG_DONE, outFilePath);
 });
@@ -729,11 +729,11 @@ ipcMain.on(commands.GENERATIVE_IMAGE_BACKGROUND, async (event, payload) => {
   const negativeprompt = payload.negativePrompt;
   const randomSeed = payload.seed;
   // GET THE OUTPUT DIRECTORY
-  let outputDir = payload.outputPath;
+  const outputPath = payload.outputPath;
   const fileName = parse(fullfileName).name;
   const fileExt = parse(fullfileName).ext;
   const imgDate = await obtainGenerativeImage(fullfileName,prompt,negativeprompt,randomSeed)
-  const outFilePath = join(payload.outputPath, `${fileName}_${new Date().getTime()}${fileExt}`)
+  const outFilePath = join(outputPath, `${fileName}_${new Date().getTime()}${fileExt}`)
   await downloadFile(outFilePath, imgDate)
   mainWindow.webContents.send(commands.GENERATIVE_IMAGE_BACKGROUND_DONE, outFilePath);
 });

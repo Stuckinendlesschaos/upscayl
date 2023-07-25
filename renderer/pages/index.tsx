@@ -565,7 +565,7 @@ const Home = () => {
       setProgress("Generating The IMAGE...");
 
       if (!batchMode) {
-        //生成随机数
+        //生成随机种子
         const seed = setRandomizeSeed();
         window.electron.send(commands.GENERATIVE_IMAGE_BACKGROUND, {
           imagePath: removebgOfImagePath,
