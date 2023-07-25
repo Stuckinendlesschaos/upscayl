@@ -31,3 +31,11 @@ npm run dist
 ## PUBLISH THE APP, MAKE SURE TO ADD GH_TOKEN= IN SHELL
 npm run publish-app
 ```
+
+# Credits ❤
+
+- Real-ESRGAN for their wonderful research work.\
+[Real-ESRGAN: Copyright (c) 2021, Xintao Wang](https://github.com/xinntao/Real-ESRGAN/)
+
+- Foolhardy for their [Remacri model](https://upscale.wiki/wiki/Model_Database).
+- [Kim2091](https://upscale.wiki/wiki/User:Kim2091)	for their [Ultrasharp and Ultramix Balanced model](https://upscale.wiki/wiki/Model_Database).
