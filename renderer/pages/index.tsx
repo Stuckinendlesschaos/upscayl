@@ -553,7 +553,7 @@ const Home = () => {
 
   const setRandomizeSeed = () => {
     const min = Math.ceil(0);
-    const max = Math.floor((2^32)/2);
+    const max = Math.floor(Math.pow(2, 32)/2);
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
