@@ -452,7 +452,6 @@ const Home = () => {
           saveImageAs,
         });
       } else{
-        console.log("adasda案发大幅",imagePath);
         window.electron.send(commands.REMOVE_BACKGROUND, {
           imagePath,
           outputPath,
