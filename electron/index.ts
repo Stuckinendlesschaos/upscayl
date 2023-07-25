@@ -698,11 +698,10 @@ ipcMain.on(commands.REMOVE_BACKGROUND, async (event, payload) => {
   const fullfileName = payload.imagePath;
   const fileName = parse(fullfileName).name;
   const fileExt = parse(fullfileName).ext;
-  console.log("adadad qwdqdqdq德瓦达千瓦的潜伏期无法",fullfileName);
-  const imgDate = await getRemoveBgImgData(fullfileName)
-  const outFilePath = join(payload.outputPath, `${fileName}_${new Date().getTime()}${fileExt}`)
+  const imgDate = await getRemoveBgImgData(fullfileName);
+  const outFilePath = join(payload.outputPath, `${fileName}_${new Date().getTime()}${fileExt}`);
   event.reply(event,"pong");
-  await downloadFile(outFilePath, imgDate)
+  await downloadFile(outFilePath, imgDate);
   mainWindow.webContents.send(commands.REMMOVEBG_DONE, outFilePath);
 });
 
@@ -711,11 +710,11 @@ ipcMain.on(commands.FOLDER_REMOVE_BACKGROUND, async (_, payload) => {
   const fileList: any = await getFileList(payload.batchFolderPath)
   let sum = 0
   fileList.forEach(async (item) => {
-    const imgDate = await getRemoveBgImgData(item.filePath)
-    const outFileDir = join(payload.outputPath, './rmbg')
-    const outFilePath = join(outFileDir, `${item.name}_${new Date().getTime()}${item.ext}`)
-    await downloadFile(outFilePath,imgDate)
-    sum++
+    const imgDate = await getRemoveBgImgData(item.filePath);
+    const outFileDir = join(payload.outputPath, './rmbg');
+    const outFilePath = join(outFileDir, `${item.name}_${new Date().getTime()}${item.ext}`);
+    await downloadFile(outFilePath,imgDate);
+    sum++;
     if(sum == fileList.length){
       mainWindow.webContents.send(commands.REMMOVEBATCHBG_DONE, outFileDir);
     }
@@ -727,7 +726,6 @@ ipcMain.on(commands.GENERATIVE_IMAGE_BACKGROUND, async (event, payload) => {
   // COPY IMAGE TO TMP FOLDER
   const fullfileName = payload.imagePath;
   const prompt = payload.prompt;
-  logit(fullfileName,prompt);
   const negativeprompt = payload.negativePrompt;
   const randomSeed = payload.seed;
   // GET THE OUTPUT DIRECTORY
@@ -737,7 +735,7 @@ ipcMain.on(commands.GENERATIVE_IMAGE_BACKGROUND, async (event, payload) => {
   const imgDate = await obtainGenerativeImage(fullfileName,prompt,negativeprompt,randomSeed)
   const outFilePath = join(payload.outputPath, `${fileName}_${new Date().getTime()}${fileExt}`)
   await downloadFile(outFilePath, imgDate)
-  mainWindow.webContents.send(commands.REMMOVEBG_DONE, outFilePath);
+  mainWindow.webContents.send(commands.GENERATIVE_IMAGE_BACKGROUND_DONE, outFilePath);
 });
 
 //------------------------Video Upscayl-----------------------------//

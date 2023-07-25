@@ -21,7 +21,7 @@ const Home = () => {
   // STATES
   const [imagePath, SetImagePath] = useState("");
   const [upscaledImagePath, setUpscaledImagePath] = useState("");
-  const [removebgOfImagePath,setremovebgOfImagePath]= useState("");   
+  const [removebgOfImagePath,setRemoveBgOfImagePath]= useState("");   
   const [remove] = useState("");                  
   const [outputPath, setOutputPath] = useState("");
   const [scaleFactor] = useState(4);
@@ -91,7 +91,7 @@ const Home = () => {
     // BACKGROUND REMOVING DONE
     window.electron.on(commands.REMMOVEBG_DONE, (_, data: string) => {
       setProgress("");
-      setremovebgOfImagePath(data);
+      setRemoveBgOfImagePath(data);
       // addToLog(data);
     });
 
@@ -100,6 +100,12 @@ const Home = () => {
       setProgress("");
       setBatchFolderPath(data)
       setOutputPath(data + "Plus");
+      // addToLog(data);
+    });
+
+    window.electron.on(commands.GENERATIVE_IMAGE_BACKGROUND_DONE, (_, data: string) => {
+      setProgress("");
+      setOutputPath(data + "Pro");
       // addToLog(data);
     });
 
@@ -259,7 +265,7 @@ const Home = () => {
     setProgress("");
 
     SetImagePath("");
-    setremovebgOfImagePath("");
+    setRemoveBgOfImagePath("");
     setUpscaledImagePath("");
 
     setBatchFolderPath("");
@@ -439,7 +445,7 @@ const Home = () => {
     if (isVideo) {
       setRemovebgOfVideoPath("");
     } else {
-      setremovebgOfImagePath("");
+      setRemoveBgOfImagePath("");
     }
 
     if (!isVideo && (imagePath !== "" || batchFolderPath !== "")) {
@@ -722,7 +728,6 @@ const Home = () => {
             handleModelChange={handleModelChange}
             handleDrop={handleDrop}
             outputHandler={outputHandler}
-            bgRemoveHandler={bgRemoveHandler}
             upscaylHandler={upscaylHandler}
             batchMode={batchMode}
             setModel={setModel}
