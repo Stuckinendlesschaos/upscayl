@@ -32,7 +32,7 @@ export const getFileList = folder => {
     })
 }
 
-export const getRemoveBgImgData = (imagePath) =>{
+export const getRemoveBgImgData = (imagePath: string) =>{
   return new Promise((resolve,reject) => {
     const data = new FormData()
     data.append('image', fs.createReadStream(imagePath))
@@ -59,76 +59,44 @@ export const getRemoveBgImgData = (imagePath) =>{
         resolve(imgData)
     })
     .catch((error) => {
-        console.log('axios error >>>>>> ', error)
+        console.error('axios error >>>>>> ', error)
         reject("")
     })
   })
 }
 
-export const getAddBgImgData = (imagePath) => {
-    return new Promise((resolve,reject) => {
+export const obtainGenerativeImage = (imagePath: string,prompt: string,negativePrompt: string, randomSeed: number) => {
+    return new Promise((resolve, reject) => {
         const data = new FormData()
-        data.append('image', fs.createReadStream(imagePath))
+        data.append('prompt', prompt)
+        data.append('negativePrompt', negativePrompt)
+        data.append('seed', randomSeed)
+        data.append('imageFile', fs.createReadStream(imagePath))
         const config = {
-            method: 'post',
-            url: 'https://pixian.ai/api/v1/remove-background',
-            responseType: 'arraybuffer',
-            headers: {
-            Authorization:
-                'Basic cHhkOWlsN2tjeWE1cWZlOmc5bWdxdWhpMjM4OWw3aXQxZzd0anRrNjhzcHB0OHMwam9wNHZ1ZjR0aWh0c3Y0OTc5YWI=',
+          method: 'post',
+          url: 'https://beta-sdk.photoroom.com/v1/instant-backgrounds',
+          responseType: 'arraybuffer',
+          headers: {
+            'x-api-key': 'df8d329104d27f2b0eb32ed1119e7e7c07e36587',
             Accept: '*/*',
-            Host: 'pixian.ai',
+            Host: 'beta-sdk.photoroom.com',
             Connection: 'keep-alive',
             'Content-Type':
-                'multipart/form-data; boundary=--------------------------770839930141001909509711',
-            // @ts-ignore
-            //   ...data.getHeaders(),
-            },
-            data: data,
+              'multipart/form-data; boundary=--------------------------770839930141001909509711'
+          },
+          data: data
         }
-        // @ts-ignore
-        axios(config).then((response) => {
-            const imgData = Buffer.from(response.data, 'base64') //Buffer编码
-            resolve(imgData)
-        })
-        .catch((error) => {
-            console.log('axios error >>>>>> ', error)
-            reject("")
-        })
-      })
-  }
 
-export const obtainGenerativeImage = (imagePath) => {
-    return new Promise((resolve,reject) => {
-        const data = new FormData()
-        data.append('image', fs.createReadStream(imagePath))
-        // GENERATIVE IMAGE API CALLBACK
-        const config = {
-            method: 'post',
-            url: 'https://pixian.ai/api/v1/remove-background',
-            responseType: 'arraybuffer',
-            headers: {
-            Authorization:
-                'Basic cHhkOWlsN2tjeWE1cWZlOmc5bWdxdWhpMjM4OWw3aXQxZzd0anRrNjhzcHB0OHMwam9wNHZ1ZjR0aWh0c3Y0OTc5YWI=',
-            Accept: '*/*',
-            Host: 'pixian.ai',
-            Connection: 'keep-alive',
-            'Content-Type':
-                'multipart/form-data; boundary=--------------------------770839930141001909509711',
-            // @ts-ignore
-            //   ...data.getHeaders(),
-            },
-            data: data,
-        }
         // @ts-ignore
-        axios(config).then((response) => {
+        axios(config)
+          .then((response) => {
             const imgData = Buffer.from(response.data, 'base64') //Buffer编码
             resolve(imgData)
-        })
-        .catch((error) => {
-            console.log('axios error >>>>>> ', error)
-            reject("")
-        })
+          })
+          .catch((error) => {
+            console.error('axios error >>>>>> ', error)
+            reject('')
+          })
       })
 }
 

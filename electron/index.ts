@@ -14,7 +14,7 @@ import { format } from "url";
 import fs from "fs";
 
 import { execPath, modelsPath } from "./binaries";
-import { getFileList, getRemoveBgImgData, obtainGenerativeImage, downloadFile } from './utils/file'
+import { getFileList, getRemoveBgImgData, obtainGenerativeImage, downloadFile} from './utils/file'
 
 // Packages
 import {
@@ -698,8 +698,10 @@ ipcMain.on(commands.REMOVE_BACKGROUND, async (event, payload) => {
   const fullfileName = payload.imagePath;
   const fileName = parse(fullfileName).name;
   const fileExt = parse(fullfileName).ext;
+  console.log("adadad qwdqdqdq德瓦达千瓦的潜伏期无法",fullfileName);
   const imgDate = await getRemoveBgImgData(fullfileName)
   const outFilePath = join(payload.outputPath, `${fileName}_${new Date().getTime()}${fileExt}`)
+  event.reply(event,"pong");
   await downloadFile(outFilePath, imgDate)
   mainWindow.webContents.send(commands.REMMOVEBG_DONE, outFilePath);
 });
@@ -724,10 +726,15 @@ ipcMain.on(commands.FOLDER_REMOVE_BACKGROUND, async (_, payload) => {
 ipcMain.on(commands.GENERATIVE_IMAGE_BACKGROUND, async (event, payload) => {
   // COPY IMAGE TO TMP FOLDER
   const fullfileName = payload.imagePath;
+  const prompt = payload.prompt;
+  logit(fullfileName,prompt);
+  const negativeprompt = payload.negativePrompt;
+  const randomSeed = payload.seed;
+  // GET THE OUTPUT DIRECTORY
+  let outputDir = payload.outputPath;
   const fileName = parse(fullfileName).name;
   const fileExt = parse(fullfileName).ext;
-
-  const imgDate = await obtainGenerativeImage(fullfileName)
+  const imgDate = await obtainGenerativeImage(fullfileName,prompt,negativeprompt,randomSeed)
   const outFilePath = join(payload.outputPath, `${fileName}_${new Date().getTime()}${fileExt}`)
   await downloadFile(outFilePath, imgDate)
   mainWindow.webContents.send(commands.REMMOVEBG_DONE, outFilePath);

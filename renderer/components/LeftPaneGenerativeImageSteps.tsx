@@ -1,7 +1,6 @@
 import { useAtom, useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
-import ReactTooltip from "react-tooltip";
 import { themeChange } from "theme-change";
 import { modelsListAtom } from "../atoms/modelsListAtom";
 import useLog from "./hooks/useLog";
@@ -24,6 +23,7 @@ interface IProps {
   setPromptMode: React.Dispatch<React.SetStateAction<boolean>>;
   setPrompt: React.Dispatch<React.SetStateAction<string>>;
   setNegativePrompt: React.Dispatch<React.SetStateAction<string>>;
+  setRandomizeSeed: () => number;
   // setPrompt: (value: string) => string;
   // setNegativePrompt: (value: string) => string;
 //   setSaveImageAs: React.Dispatch<React.SetStateAction<string>>;
@@ -42,6 +42,7 @@ function LeftPaneGenerativeImageSteps({
   setPromptMode,
   setPrompt,
   setNegativePrompt,
+  setRandomizeSeed,
 }: IProps) {
   // 日志打印 
   const { logit } = useLog();
@@ -103,8 +104,8 @@ function LeftPaneGenerativeImageSteps({
         <button
           className="btn-accent btn"
           onClick={generativeBgImageHandler}
-          disabled={progress.length === 20}>
-          {progress.length === 20 ? "生成背景中⏳" : "生成背景"}
+          disabled={progress.length === 23}>
+          {progress.length === 23 ? "生成背景中⏳" : "生成背景"}
         </button>
         </div>
       </div>
@@ -117,14 +118,14 @@ function LeftPaneGenerativeImageSteps({
             测试中
         </p>
         </div>
-        <button
-          className="btn-accent btn"
-          onClick={generativePartialImageHandler}
-          disabled={progress.length === 20}>
-          {progress.length === 20 ? "局部生成中⏳" : "局部生成"}
-        </button>
+          <button
+            className="btn-accent btn"
+            onClick={generativePartialImageHandler}
+            disabled={progress.length === 29}>
+            {progress.length === 29 ? "局部生成中⏳" : "局部生成"}
+          </button>
       </div>
-    
+  
     </div>
 
       

@@ -446,14 +446,13 @@ const Home = () => {
       setProgress("Waiting a minute....");
       //在处理过程中传递的逻辑
       if(batchMode){
-        console.log("batchFolderPath ", batchFolderPath);
-        console.log("commands.FOLDER_REMOVE_BACKGROUND = ", commands.FOLDER_REMOVE_BACKGROUND);
         window.electron.send(commands.FOLDER_REMOVE_BACKGROUND, {
           batchFolderPath,
           outputPath,
           saveImageAs,
         });
       } else{
+        console.log("adasda案发大幅",imagePath);
         window.electron.send(commands.REMOVE_BACKGROUND, {
           imagePath,
           outputPath,
@@ -547,35 +546,37 @@ const Home = () => {
     localStorage.setItem("prompt", prompt);
   };
 
+  const setRandomizeSeed = () => {
+    const min = Math.ceil(0);
+    const max = Math.floor((2^32)/2);
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
 
   const generativeBgImageHandler = async () => {
 
-    logit("📢 Generating Image background");
-
     //在处理过程中传递的逻辑 ... 
-    if(removebgOfImagePath !== "" || batchFolderPath !== ""){
-      setProgress("Hold on...");
+    if(removebgOfImagePath !== "" && (prompt !== "" || negativePrompt !== "")){
+      setProgress("Generating The IMAGE...");
 
       if (!batchMode) {
+        //生成随机数
+        const seed = setRandomizeSeed();
         window.electron.send(commands.GENERATIVE_IMAGE_BACKGROUND, {
-          scaleFactor,
           imagePath: removebgOfImagePath,
           outputPath,
           prompt,
           negativePrompt,
-          model,
-          gpuId: gpuId.length === 0 ? null : gpuId,
+          seed,
           saveImageAs,
-          scale,
         });
-        logit("📢 GENERATIVE IMAGE BACKGROUND Done!");
+
       } else {
         logit("📢 Folders' generative background is not currently supported ");
       }
     }
     else {
-      logit("📢 No valid image to process");
-      alert(`Please select ${isVideo ? "a video" : "an transparent image"} to generate bg`);
+      alert(`Have detected a lack of elements to generate background`);
     }
   }
 
@@ -585,7 +586,7 @@ const Home = () => {
 
     //在处理过程中传递的逻辑 ... 
     if(imagePath !== "" || removebgOfImagePath !== "" || batchFolderPath !== ""){
-      setProgress("Hold on...");
+      setProgress("Generating Pritial Content...");
 
       if (!batchMode) {
         window.electron.send(commands.GENERATIVE_PARTIAL_CONTENT, {
@@ -706,6 +707,7 @@ const Home = () => {
             setPromptMode={setPromptMode}
             setPrompt={setPrompt}
             setNegativePrompt={setNegativePrompt}
+            setRandomizeSeed={setRandomizeSeed}
             generativeBgImageHandler={generativeBgImageHandler}
             generativePartialImageHandler={generativePartialImageHandler}
             imagePath={imagePath}
