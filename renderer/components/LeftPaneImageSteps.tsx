@@ -55,6 +55,7 @@ function LeftPaneImageSteps({
     value: null,
   });
 
+  // 导入优化Model,目前模型放置在本地！！！ 
   const modelOptions = useAtomValue(modelsListAtom);
 
   const { logit } = useLog();
@@ -138,14 +139,6 @@ function LeftPaneImageSteps({
     },
   };
 
-  // const modelOptions = [
-  //   { label: "通用素材 (Real-ESRGAN)", value: "realesrgan-x4plus" },
-  //   { label: "通用素材 (Remacri)", value: "remacri" },
-  //   { label: "通用素材 (Ultramix Balanced)", value: "ultramix_balanced" },
-  //   { label: "通用素材 (Ultrasharp)", value: "ultrasharp" },
-  //   { label: "数字艺术照", value: "realesrgan-x4plus-anime" },
-  // ];
-
   useEffect(() => {}, [imagePath]);
 
   return (
@@ -197,10 +190,10 @@ function LeftPaneImageSteps({
       </div>
 
       {/* STEP 4 */}
-      <div className="animate-step-in">
+      <div className="animate-step-in flex flex-col gap-2">
         <p className="step-heading">步骤 4</p>
         <p className="mb-2 text-sm">优化画质类别</p>
-
+        {/* TODO: 切换成主题色 */}
         <Select
           options={modelOptions}
           components={{
@@ -211,8 +204,8 @@ function LeftPaneImageSteps({
             handleModelChange(e);
             setCurrentModel({ label: e.label, value: e.value });
           }}
-          className="react-select-container"
-          classNamePrefix="react-select"
+          className="select-primary select "
+          // classNamePrefix="react-select"
           value={currentModel}
         />
 

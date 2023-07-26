@@ -78,9 +78,9 @@ function LeftPaneGenerativeImageSteps({
         {/* prompt 关键词显示 */}
         {prompt.length > 0 && (
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium">正向关键词： </p>
+          <p className="text-sm font-medium step-heading">正向关键词： </p>
           <input 
-            style={{backgroundColor:'yellow'}}
+            style={{fontWeight:'bold'}}
             type="text"
             className="input w-full max-w-xs"
             value={prompt}
@@ -91,9 +91,9 @@ function LeftPaneGenerativeImageSteps({
         {/* negativePrompt 关键词显示 */}
         {negativePrompt.length > 0 && (
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium">反向关键词： </p>
+          <p className="text-sm font-medium step-heading">反向关键词： </p>
           <input
-            style={{backgroundColor:'gray'}}
+            style={{fontWeight:'bold'}}
             type="text"
             className="input w-full max-w-xs"
             value={negativePrompt}

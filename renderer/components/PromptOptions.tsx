@@ -52,7 +52,7 @@ const PromptOptions = ({
         <div className="flex max-h-96 flex-col justify-center gap-5 overflow-auto p-5">
              {/* CONCEPT INPUT */}
             <div className="flex flex-col gap-2">
-            <p className="text-sm font-medium">Concept</p>
+            <p className="text-sm font-medium">关键词</p>
             <input
                 type="text"
                 placeholder="Type here"
@@ -64,7 +64,7 @@ const PromptOptions = ({
 
             {/* TYPEOF INPUT */}
             <div className="flex flex-col gap-2">
-                <p className="text-sm font-medium">Typeof</p>
+                <p className="text-sm font-medium">类型</p>
                 <select className="select-primary select">
                 <option value="custom">Default</option>
                 {availableTypeOf.map((typeOfConcept) => {

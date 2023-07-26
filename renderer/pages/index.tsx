@@ -21,7 +21,8 @@ const Home = () => {
   // STATES
   const [imagePath, SetImagePath] = useState("");
   const [upscaledImagePath, setUpscaledImagePath] = useState("");
-  const [removebgOfImagePath,setRemoveBgOfImagePath]= useState("");   
+  const [removebgOfImagePath,setRemoveBgOfImagePath] = useState("");   
+  const [generativeImagePath,setGenerativeImagePath] = useState("");
   const [remove] = useState("");                  
   const [outputPath, setOutputPath] = useState("");
   const [scaleFactor] = useState(4);
@@ -99,12 +100,13 @@ const Home = () => {
     window.electron.on(commands.REMMOVEBATCHBG_DONE, (_, data: string) => {
       setProgress("");
       setBatchFolderPath(data)
-      setOutputPath(data + "Plus");
+      // setOutputPath(data + "Plus");
       // addToLog(data);
     });
 
     window.electron.on(commands.GENERATIVE_IMAGE_BACKGROUND_DONE, (_, data: string) => {
       setProgress("");
+      setGenerativeImagePath(data);
       setOutputPath(data + "Pro");
       // addToLog(data);
     });
@@ -581,7 +583,7 @@ const Home = () => {
       }
     }
     else {
-      alert(`Have detected a lack of elements to generate background`);
+      alert(`选择透明图和关键词生成背景！`);
     }
   }
 
@@ -610,7 +612,7 @@ const Home = () => {
     }
     else {
       logit("📢 No valid image to process");
-      alert(`Please select ${isVideo ? "a video" : "an image"} to generate partial content`);
+      alert(`选择${isVideo ? "视频素材" : "图片素材"}生成局部内容`);
     }
   }
 
@@ -806,14 +808,6 @@ const Home = () => {
                   hideZoomOptions={true}
               />
               <img
-                // src={
-                //   "file://" +
-                //   `${
-                //     upscaledImagePath
-                //       ? formatPath(upscaledImagePath)
-                //       : formatPath(imagePath)
-                //   }`
-                // }
                 src={
                   "file://" +
                   `${
@@ -858,7 +852,143 @@ const Home = () => {
           </>
         )}
 
-        {/* COMPARISON SLIDER */}
+        {/* COMPARISON SLIDER FOR ORIGINAL OR BGREMOVE*/}
+        {!batchMode &&
+          !isVideo &&
+          imagePath.length > 0 &&
+          removebgOfImagePath.length > 0 &&
+          generativeImagePath.length === 0 &&
+          upscaledImagePath.length === 0 && (
+            <>
+              <ImageOptions
+                zoomAmount={zoomAmount}
+                setZoomAmount={setZoomAmount}
+                resetImagePaths={resetImagePaths}
+              />
+               <PromptOptions
+                  promptMode={promptMode}
+                  concept={concept}
+                  typeofInput={typeofInput}
+                  // addConceptEvent={addConceptEvent}
+                  setPromptMode={setPromptMode}
+                  setConcept={setConcept}
+                  setTypeofInput={setTypeofInput}
+                  addConcept={addConcept}
+                  removeConcept={removeConcept}
+                  hideZoomOptions={true}
+              />
+              <ReactCompareSlider
+                itemOne={
+                  <>
+                    <p className="absolute bottom-1 left-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
+                      Before
+                    </p>
+
+                    <img
+                      src={"file://" + imagePath}
+                      alt="Before"
+                      onMouseMove={handleMouseMove}
+                      style={{
+                        objectFit: "contain",
+                        backgroundPosition: "0% 0%",
+                        transformOrigin: backgroundPosition,
+                      }}
+                      className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
+                    />
+                  </>
+                }
+                itemTwo={
+                  <>
+                    <p className="absolute bottom-1 right-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
+                      After
+                    </p>
+                    <img
+                      src={"file://" + removebgOfImagePath}
+                      alt="After"
+                      style={{
+                        objectFit: "contain",
+                        backgroundPosition: "0% 0%",
+                        transformOrigin: backgroundPosition,
+                      }}
+                      onMouseMove={handleMouseMove}
+                      className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
+                    />
+                  </>
+                }
+                className="group h-screen"
+              />
+            </>
+          )}
+
+        {/* COMPARISON SLIDER FOR ORIGINAL AND*/}
+        {!batchMode &&
+          !isVideo &&
+          removebgOfImagePath.length > 0 &&
+          generativeImagePath.length > 0 && (
+            <>
+              <ImageOptions
+                zoomAmount={zoomAmount}
+                setZoomAmount={setZoomAmount}
+                resetImagePaths={resetImagePaths}
+              />
+               <PromptOptions
+                  promptMode={promptMode}
+                  concept={concept}
+                  typeofInput={typeofInput}
+                  setPromptMode={setPromptMode}
+                  setConcept={setConcept}
+                  setTypeofInput={setTypeofInput}
+                  addConcept={addConcept}
+                  removeConcept={removeConcept}
+                  hideZoomOptions={true}
+              />
+              <ReactCompareSlider
+                itemOne={
+                  <>
+                    <p className="absolute bottom-1 left-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
+                      Before
+                    </p>
+
+                    <img
+                      src={
+                        "file://" + 
+                        `${removebgOfImagePath ? removebgOfImagePath : imagePath}`
+                      }
+                      alt="Before"
+                      onMouseMove={handleMouseMove}
+                      style={{
+                        objectFit: "contain",
+                        backgroundPosition: "0% 0%",
+                        transformOrigin: backgroundPosition,
+                      }}
+                      className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
+                    />
+                  </>
+                }
+                itemTwo={
+                  <>
+                    <p className="absolute bottom-1 right-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
+                      After
+                    </p>
+                    <img
+                      src={"file://" + generativeImagePath}
+                      alt="After"
+                      style={{
+                        objectFit: "contain",
+                        backgroundPosition: "0% 0%",
+                        transformOrigin: backgroundPosition,
+                      }}
+                      onMouseMove={handleMouseMove}
+                      className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
+                    />
+                  </>
+                }
+                className="group h-screen"
+              />
+            </>
+          )}
+
+        {/* COMPARISON SLIDER FOR ORIGINAL AND UPSCAYL*/}
         {!batchMode &&
           !isVideo &&
           imagePath.length > 0 &&
@@ -884,7 +1014,7 @@ const Home = () => {
                 itemOne={
                   <>
                     <p className="absolute bottom-1 left-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
-                      Original
+                      Before
                     </p>
 
                     <img
@@ -892,8 +1022,7 @@ const Home = () => {
                         "file://" + 
                         `${removebgOfImagePath ? removebgOfImagePath : imagePath}`
                       }
-                      // src={"file:///" + formatPath(imagePath)}
-                      alt="Original"
+                      alt="Before"
                       onMouseMove={handleMouseMove}
                       style={{
                         objectFit: "contain",
@@ -907,79 +1036,11 @@ const Home = () => {
                 itemTwo={
                   <>
                     <p className="absolute bottom-1 right-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
-                      Upscayled
+                      After
                     </p>
                     <img
-                      // src={"file://" + formatPath(upscaledImagePath)}
                       src={"file://" + upscaledImagePath}
-                      alt="Upscayl"
-                      style={{
-                        objectFit: "contain",
-                        backgroundPosition: "0% 0%",
-                        transformOrigin: backgroundPosition,
-                      }}
-                      onMouseMove={handleMouseMove}
-                      className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
-                    />
-                  </>
-                }
-                className="group h-screen"
-              />
-            </>
-          )}
-
-        {/* COMPARISON SLIDER */}
-        {!batchMode &&
-          !isVideo &&
-          imagePath.length > 0 &&
-          removebgOfImagePath.length > 0 &&
-          upscaledImagePath.length === 0 && (
-            <>
-              <ImageOptions
-                zoomAmount={zoomAmount}
-                setZoomAmount={setZoomAmount}
-                resetImagePaths={resetImagePaths}
-              />
-               <PromptOptions
-                  promptMode={promptMode}
-                  concept={concept}
-                  typeofInput={typeofInput}
-                  // addConceptEvent={addConceptEvent}
-                  setPromptMode={setPromptMode}
-                  setConcept={setConcept}
-                  setTypeofInput={setTypeofInput}
-                  addConcept={addConcept}
-                  removeConcept={removeConcept}
-                  hideZoomOptions={true}
-              />
-              <ReactCompareSlider
-                itemOne={
-                  <>
-                    <p className="absolute bottom-1 left-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
-                      Original
-                    </p>
-
-                    <img
-                      src={"file://" + imagePath}
-                      alt="Original"
-                      onMouseMove={handleMouseMove}
-                      style={{
-                        objectFit: "contain",
-                        backgroundPosition: "0% 0%",
-                        transformOrigin: backgroundPosition,
-                      }}
-                      className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
-                    />
-                  </>
-                }
-                itemTwo={
-                  <>
-                    <p className="absolute bottom-1 right-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
-                      BgRemoved
-                    </p>
-                    <img
-                      src={"file://" + removebgOfImagePath}
-                      alt="BgRemoved"
+                      alt="After"
                       style={{
                         objectFit: "contain",
                         backgroundPosition: "0% 0%",

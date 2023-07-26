@@ -1,19 +1,12 @@
 {
   "name": "image-assistant",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "productName": "剪佳",
   "license": "AGPL-3.0",
-  "description": "剪佳 - Free and Open Source AI Image Upscaler",
+  "description": "剪佳 - Free and Open Source AI Material Editor",
   "keywords": [
-    "AI",
-    "Upscaler",
-    "Image Upscale",
-    "Linux image upscale",
-    "Topaz Gigapixel",
-    "Linux",
-    "KDE",
-    "Gnome"
+    "AI"
   ],
   "main": "main/index.js",
   "scripts": {

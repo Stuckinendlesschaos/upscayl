@@ -6,11 +6,11 @@ export type TModelsList = {
 }[];
 
 export const defaultModelsList = [
-  { label: "General Photo (Real-ESRGAN)", value: "realesrgan-x4plus" },
-  { label: "General Photo (Remacri)", value: "remacri" },
-  { label: "General Photo (Ultramix Balanced)", value: "ultramix_balanced" },
-  { label: "General Photo (Ultrasharp)", value: "ultrasharp" },
-  { label: "Digital Art", value: "realesrgan-x4plus-anime" },
+  { label: "通用", value: "realesrgan-x4plus" },
+  { label: "人像/风景", value: "remacri" },
+  { label: "色彩饱和", value: "ultramix_balanced" },
+  { label: "边缘锐化", value: "ultrasharp" },
+  { label: "数字艺术", value: "realesrgan-x4plus-anime" },
 ];
 
 export const modelsListAtom = atom<TModelsList>(defaultModelsList);

@@ -33,8 +33,8 @@ const ImageOptions = ({
             重置素材
           </button>
           {!hideZoomOptions && (
-            <div className="flex flex-row items-center gap-2">
-              <p className="w-20">Zoom:</p>
+            <div className="flex flex-row items-Cocenter gap-2">
+              <p className="w-20">放大：</p>
               <button
                 className={`btn-primary btn ${
                   zoomAmount === "100%" ? "btn-secondary" : "btn-primary"
