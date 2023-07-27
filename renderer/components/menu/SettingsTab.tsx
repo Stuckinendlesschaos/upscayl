@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { themeChange } from "theme-change";
-import commands from "../../electron/commands";
+import commands from "../../../electron/commands";
 import { useAtom, useAtomValue } from "jotai";
-import { customModelsPathAtom, scaleAtom } from "../atoms/userSettingsAtom";
-import { modelsListAtom } from "../atoms/modelsListAtom";
-import useLog from "./hooks/useLog";
+import { customModelsPathAtom, scaleAtom } from "../../atoms/userSettingsAtom";
+import { modelsListAtom } from "../../atoms/modelsListAtom";
+import useLog from "../hooks/useLog";
 
 interface IProps {
   progress: string;

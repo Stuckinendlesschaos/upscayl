@@ -1,16 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
 import commands from "../../electron/commands";
 import { ReactCompareSlider } from "react-compare-slider";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import ProgressBar from "../components/ProgressBar";
-import RightPaneInfo from "../components/RightPaneInfo";
-import ImageOptions from "../components/ImageOptions";
-import PromptOptions from "../components/PromptOptions";
-import LeftPaneImageSteps from "../components/LeftPaneImageSteps";
-import LeftPaneGenerativeImageSteps from "../components/LeftPaneGenerativeImageSteps";
-import Tabs from "../components/Tabs";
-import SettingsTab from "../components/SettingsTab";
+import Header from "../components/basic/Header";
+import Footer from "../components/basic/Footer";
+import ProgressBar from "../components/basic/ProgressBar";
+import RightPaneInfo from "../components/display/RightPaneInfo";
+import ImageOptions from "../components/display/ImageOptions";
+import PromptOptions from "../components/display/PromptOptions";
+import LeftPaneImageSteps from "../components/menu/LeftPaneImageSteps";
+import LeftPaneGenerativeImageSteps from "../components/menu/LeftPaneGenerativeImageSteps";
+import Tabs from "../components/tabs/Tabs";
+import SettingsTab from "../components/menu/SettingsTab";
 import { useAtom } from "jotai";
 import { logAtom } from "../atoms/logAtom";
 import { modelsListAtom } from "../atoms/modelsListAtom";
@@ -403,6 +403,7 @@ const Home = () => {
     }
   };
 
+  //处理粘贴事件
   const handlePaste = (e) => {
     resetImagePaths();
     e.preventDefault();
@@ -411,7 +412,7 @@ const Home = () => {
     const filePath = e.clipboardData.files[0].path;
     const extension = e.clipboardData.files[0].name.split(".").at(-1);
 
-    logit("📢 Pasted file: ", JSON.stringify({ type, filePath, extension }));
+    logit("📋 Pasted file: ", JSON.stringify({ type, filePath, extension }));
 
     if (
       !type.includes("image") &&
@@ -421,7 +422,7 @@ const Home = () => {
     } else {
       SetImagePath(filePath);
       var dirname = filePath.match(/(.*)[\/\\]/)[1] || "";
-      logit("📢 Setting output path: ", dirname);
+      logit("🗂 Setting output path: ", dirname);
       setOutputPath(dirname);
     }
   };

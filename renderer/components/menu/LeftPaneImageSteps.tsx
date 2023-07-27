@@ -2,8 +2,8 @@ import { useAtom, useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { themeChange } from "theme-change";
-import { modelsListAtom } from "../atoms/modelsListAtom";
-import useLog from "./hooks/useLog";
+import { modelsListAtom } from "../../atoms/modelsListAtom";
+import useLog from "../hooks/useLog";
 
 interface IProps {
   progress: string;
@@ -227,7 +227,7 @@ function LeftPaneImageSteps({
               onClick={(e) => {
                 setDoubleUpscayl(!doubleUpscayl);
               }}>
-              双倍优化
+              双倍超分
             </p>
             <button
               className="badge-info badge cursor-help"
@@ -258,7 +258,7 @@ function LeftPaneImageSteps({
           className="btn-accent btn"
           onClick={upscaylHandler}
           disabled={progress.length === 10}>
-          {progress.length === 10 ? "优化中⏳" : "优化"}
+          {progress.length === 10 ? "超分中⏳" : "超分"}
         </button>
       </div>
 

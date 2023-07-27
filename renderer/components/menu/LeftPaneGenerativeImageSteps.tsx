@@ -2,8 +2,8 @@ import { useAtom, useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { themeChange } from "theme-change";
-import { modelsListAtom } from "../atoms/modelsListAtom";
-import useLog from "./hooks/useLog";
+import { modelsListAtom } from "../../atoms/modelsListAtom";
+import useLog from "../hooks/useLog";
 // TODO：生成批量素材
 import batchMode from "./LeftPaneImageSteps";
 

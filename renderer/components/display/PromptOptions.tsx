@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAtom } from "jotai";
-import { promptModeAtom } from "../atoms/userSettingsAtom";
+import { promptModeAtom } from "../../atoms/userSettingsAtom";
 // 使用开源的ant-design react组件
 import {Space, Button, Select, Input} from "antd";
 // ant-sedign 图标库
@@ -69,7 +69,7 @@ const PromptOptions = ({
                 onSelect={handleTypeOfInputChange}
               />
               {/* CONCEPT INPUT */}
-              <Input placeholder="关键词" allowClear value={concept} onChange={handleConceptChange} />
+              <Input placeholder="输入关键词" allowClear value={concept} onChange={handleConceptChange} />
                 <Button type="primary" icon={<UpOutlined />} onClick={addConcept} ghost>
                     添加 
                     </Button>
