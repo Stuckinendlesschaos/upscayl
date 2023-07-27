@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useAtom } from "jotai";
 import { promptModeAtom } from "../atoms/userSettingsAtom";
+// 使用开源的ant-design react组件
+import {Space, Button, Select, Input} from "antd";
+// ant-sedign 图标库
+import { UpOutlined, DownOutlined } from '@ant-design/icons';
 
 const PromptOptions = ({
   promptMode,
@@ -24,6 +28,8 @@ const PromptOptions = ({
     const [tempPromptMode, tempSetPromptMode] = useAtom(promptModeAtom);
     promptMode = tempPromptMode;
     setPromptMode = tempSetPromptMode;
+    
+    typeofInput = "custom";
 
     useEffect(() => {
         // if (!localStorage.getItem("zoomAmount")) {
@@ -33,71 +39,56 @@ const PromptOptions = ({
         // }
     }, []);
 
+    //处理Concept响应的函数
     const handleConceptChange = (e) => {
         setConcept(e.target.value);
         localStorage.setItem("concept", e.target.value);
     };
 
+    // 处理TypeofInput响应的函数
+    const handleTypeOfInputChange = (value: string) => {
+      typeofInput = value;
+    }
+
 
   // checkbox 打开提示词时才能输入关键词   
   if(promptMode) {
     return (
-      <div className="absolute bottom-1 right-1 rounded-btn collapse fixed bottom-1 z-50 m-2 backdrop-blur-lg">
-      <input type="checkbox" className="peer" />
-      {/* <div className="peer-checked:outline-title-none collapse-title bg-opacity-25 text-center text-sm font-semibold uppercase backdrop-blur-2xl peer-checked:bg-base-300 peer-checked:text-base-content"> */}
-        <div className="outline-title peer-checked:outline-title-none collapse-title text-right text-sm font-semibold uppercase text-black mix-blend-difference outline-2 peer-checked:bg-base-300 peer-checked:text-base-content">
-            关键词设置
-        </div>
-        <div className="collapse-content bg-base-100 text-base-content">
-        <div className="flex max-h-96 flex-col justify-center gap-5 overflow-auto p-5">
-             {/* CONCEPT INPUT */}
-            <div className="flex flex-col gap-2">
-            <p className="text-sm font-medium">关键词</p>
-            <input
-                type="text"
-                placeholder="Type here"
-                className="input-bordered input w-full max-w-xs"
-                value={concept}
-                onChange={handleConceptChange}
-            />
-            </div>
-
-            {/* TYPEOF INPUT */}
-            <div className="flex flex-col gap-2">
-                <p className="text-sm font-medium">类型</p>
-                <select className="select-primary select">
-                <option value="custom">Default</option>
-                {availableTypeOf.map((typeOfConcept) => {
-                  return (
-                    <option value={typeOfConcept.value} key={typeOfConcept.value}>
-                        {typeOfConcept.label.toLocaleUpperCase()}
-                    </option>
-                    );
-                })}
-                </select>
-            </div>
-            <div className="flex flex-row items-center gap-2">
-                <button className="btn-primary btn" onClick={addConcept}>
-                    添加
-                    </button>
-                <button className="btn-primary btn" onClick={removeConcept}>
+      <div className="absolute bottom-1 rounded-btn collapse fixed bottom-1 z-50 m-2 backdrop-blur-lg">
+        <Space.Compact block>
+              {/* TYPEOFINPUT INPUT */}
+              <Select
+                style={{ width: 180 }} 
+                defaultValue="自定义"
+                options={
+                  availableTypeOf.map((typeOfConcept) => ({
+                    value: typeOfConcept.value,
+                    label: typeOfConcept.label,
+                  })
+                )}
+                onSelect={handleTypeOfInputChange}
+              />
+              {/* CONCEPT INPUT */}
+              <Input placeholder="关键词" allowClear value={concept} onChange={handleConceptChange} />
+                <Button type="primary" icon={<UpOutlined />} onClick={addConcept} ghost>
+                    添加 
+                    </Button>
+                <Button type="primary" icon={<DownOutlined />} onClick={removeConcept} ghost>
                     移除
-                    </button>
-            </div>
-            
-            </div>
-        </div>
-        </div>
+                    </Button>
+          </Space.Compact>
+          
+          </div>
     );
   }
 };
 
 
 const availableTypeOf = [
-    { label: "custom", value: "custom" },
-    { label: "style", value: "style" },
-    { label: "object", value: "object" },
-    { label: "faces", value: "faces" },
+    { label: "自定义", value: "custom" },
+    { label: "风格", value: "style" },
+    { label: "物体", value: "object" },
+    { label: "脸", value: "faces" },
     
   ];
 
