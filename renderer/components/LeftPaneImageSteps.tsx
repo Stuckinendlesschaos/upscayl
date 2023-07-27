@@ -190,11 +190,10 @@ function LeftPaneImageSteps({
       </div>
 
       {/* STEP 4 */}
-      <div className="animate-step-in flex flex-col gap-2">
+      <div className="animate-step-in">
         <p className="step-heading">步骤 4</p>
         <p className="mb-2 text-sm">优化画质类别</p>
-        {/* TODO: 切换成主题色 */}
-        <Select
+        <Select 
           options={modelOptions}
           components={{
             IndicatorSeparator: () => null,
@@ -204,8 +203,8 @@ function LeftPaneImageSteps({
             handleModelChange(e);
             setCurrentModel({ label: e.label, value: e.value });
           }}
-          className="select-primary select "
-          // classNamePrefix="react-select"
+          className="react-select-container"
+          classNamePrefix="react-select"
           value={currentModel}
         />
 
