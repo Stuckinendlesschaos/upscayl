@@ -42,7 +42,7 @@ export const getRemoveBgImgData = (imagePath: string) =>{
         responseType: 'arraybuffer',
         headers: {
         Authorization:
-            'Basic cHhkOWlsN2tjeWE1cWZlOmc5bWdxdWhpMjM4OWw3aXQxZzd0anRrNjhzcHB0OHMwam9wNHZ1ZjR0aWh0c3Y0OTc5YWI=',
+            'Basic cHhpNDR2cHJremNzZ3JmOjRuY3QybjB1N3VxbnQ5MWhhZzFhNGhybmRnMGU5N29xZDZxNnZoYmNqYXNhZGxzNDQ1b3M=',
         Accept: '*/*',
         Host: 'pixian.ai',
         Connection: 'keep-alive',
@@ -77,7 +77,7 @@ export const obtainGenerativeImage = (imagePath: string,prompt: string,negativeP
           url: 'https://beta-sdk.photoroom.com/v1/instant-backgrounds',
           responseType: 'arraybuffer',
           headers: {
-            'x-api-key': '5c601eae7aa82665f6ea77a83992ba6dacd7d514',
+            'x-api-key': '57a4c1539f100447a234ad82cc061aa9068dbe35',
             Accept: '*/*',
             Host: 'beta-sdk.photoroom.com',
             Connection: 'keep-alive',
