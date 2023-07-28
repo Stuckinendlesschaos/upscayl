@@ -158,6 +158,12 @@ app.on("ready", async () => {
 // Quit the app once all windows are closed
 app.on("window-all-closed", app.quit);
 
+// app.on("window-all-closed", ()=>{
+//   console.log("到底有没有啊");
+//   mainWindow.webContents.send(commands.CLOSE_ALL_WINDOWS);
+//   app.quit
+// });
+
 log.log("🚃 App Path: ", app.getAppPath());
 
 const logit = (...args: any) => {
@@ -711,7 +717,7 @@ ipcMain.on(commands.FOLDER_REMOVE_BACKGROUND, async (_, payload) => {
   let sum = 0
   fileList.forEach(async (item) => {
     const imgDate = await getRemoveBgImgData(item.filePath);
-    const outFileDir = join(payload.outputPath, './rmbg');
+    const outFileDir = join(payload.outputPath, './removebg_dir');
     const outFilePath = join(outFileDir, `${item.name}_${new Date().getTime()}${item.ext}`);
     await downloadFile(outFilePath,imgDate);
     sum++;

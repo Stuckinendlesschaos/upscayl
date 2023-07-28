@@ -30,6 +30,7 @@ const commands = {
   CUSTOM_MODEL_FILES_LIST: "Send custom model files list to renderer",
   LOG: "Log",
   STOP: "Stop the current operation",
+  CLOSE_ALL_WINDOWS: "close all window and exit the app",
 };
 
 export default commands;

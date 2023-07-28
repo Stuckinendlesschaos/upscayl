@@ -100,14 +100,12 @@ const Home = () => {
     window.electron.on(commands.REMMOVEBATCHBG_DONE, (_, data: string) => {
       setProgress("");
       setBatchFolderPath(data)
-      // setOutputPath(data + "Plus");
-      // addToLog(data);
     });
 
     window.electron.on(commands.GENERATIVE_IMAGE_BACKGROUND_DONE, (_, data: string) => {
       setProgress("");
       setGenerativeImagePath(data);
-      setOutputPath(data + "Pro");
+      setOutputPath(data + "_generativeBG");
       // addToLog(data);
     });
 
@@ -202,6 +200,14 @@ const Home = () => {
         setModelOptions(uniqueModelOptions);
       }
     );
+
+  //   // CLOSE WINDOW EVENTS LISTENER
+  //   window.electron.on(commands.CLOSE_ALL_WINDOWS, (_, data: string) => {
+  //     logit("READY TO EXIT AND RESET ALL COMPONENTS", data);
+  //     resetImagePaths();
+  //     resetSelectedComponentStatus();
+
+  //   });
   }, []);
 
   useEffect(() => {
@@ -277,6 +283,11 @@ const Home = () => {
     setUpscaledVideoPath("");
   };
 
+  // const resetSelectedComponentStatus = () => {
+  //   logit("退出窗口APP总是批处理关闭");
+  //   setBatchMode(false);
+  // }
+
   // HANDLERS
   const handleMouseMove = useCallback((e: any) => {
     const { left, top, width, height } = e.target.getBoundingClientRect();
@@ -319,8 +330,7 @@ const Home = () => {
     if (path !== null) {
       logit("📢 Selected Folder Path: ", path);
       setBatchFolderPath(path);
-      setOutputPath(path + "Plus");
-      // setOutputPath(path + "_upscayled");
+      setOutputPath(path + "_output");
     } else {
       logit("📢 Folder selection cancelled");
       setBatchFolderPath("");
@@ -921,7 +931,7 @@ const Home = () => {
             </>
           )}
 
-        {/* COMPARISON SLIDER FOR ORIGINAL AND*/}
+        {/* COMPARISON SLIDER FOR ORIGINAL AND GENERATIVE BG OF IMAGE*/}
         {!batchMode &&
           !isVideo &&
           removebgOfImagePath.length > 0 &&
