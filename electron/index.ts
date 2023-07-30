@@ -738,11 +738,25 @@ ipcMain.on(commands.GENERATIVE_IMAGE_BACKGROUND, async (event, payload) => {
   const outputPath = payload.outputPath;
   const fileName = parse(fullfileName).name;
   const fileExt = parse(fullfileName).ext;
-  const imgDate = await obtainGenerativeImage(fullfileName,prompt,negativeprompt,randomSeed)
-  const outFilePath = join(outputPath, `${fileName}_${new Date().getTime()}${fileExt}`)
-  await downloadFile(outFilePath, imgDate)
+  const imgDate = await obtainGenerativeImage(fullfileName,prompt,negativeprompt,randomSeed);
+  const outFilePath = join(outputPath, `${fileName}_${new Date().getTime()}`);
+  await downloadFile(outFilePath, imgDate);
   mainWindow.webContents.send(commands.GENERATIVE_IMAGE_BACKGROUND_DONE, outFilePath);
 });
+
+//------------------------ GENERATIVE Partial Content Of Image -----------------------------//
+// ipcMain.on(commands.GENERATIVE_PARTIAL_CONTENT, async (event, payload) => {
+//    // COPY IMAGE TO TMP FOLDER
+//    const fullfileName = payload.imagePath;
+//    const prompt = payload.prompt;
+//    const negativeprompt = payload.negativePrompt;
+//    const switch_seed = payload.seed_enabled;
+//    // GET THE OUTPUT DIRECTORY
+//    const outputPath = payload.outputPath;
+//    const fileName = parse(fullfileName).name;
+//    const fileExt = parse(fullfileName).ext;
+//    await obtainPartialContentOnImage();
+// });
 
 //------------------------Video Upscayl-----------------------------//
 // ipcMain.on(commands.UPSCAYL_VIDEO, async (event, payload) => {

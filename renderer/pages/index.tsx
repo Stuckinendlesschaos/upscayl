@@ -99,7 +99,7 @@ const Home = () => {
     // 批处理背景移除并且下载完成 重新指定文件目录（移除背景后的rmbg目录）
     window.electron.on(commands.REMMOVEBATCHBG_DONE, (_, data: string) => {
       setProgress("");
-      setBatchFolderPath(data)
+      setBatchFolderPath(data);
     });
 
     window.electron.on(commands.GENERATIVE_IMAGE_BACKGROUND_DONE, (_, data: string) => {
@@ -318,6 +318,7 @@ const Home = () => {
       SetImagePath(path);
       var dirname = path.match(/(.*)[\/\\]/)[1] || "";
       logit("📢 Selected Image Directory: ", dirname);
+      // 在选择Image素材后设置好存储的目录
       setOutputPath(dirname);
     }
   };
@@ -590,7 +591,7 @@ const Home = () => {
         });
 
       } else {
-        logit("📢 Folders' generative background is not currently supported ");
+        logit("📢 暂不支持对目录批处理背景生成 ");
       }
     }
     else {
@@ -598,27 +599,35 @@ const Home = () => {
     }
   }
 
+  //生成局部内容，主要用于微调，可以ADD/DEL/REPLACE etc
   const generativePartialImageHandler = async () => {
 
     logit("📢 Generating Patrtial Content For Image");
 
     //在处理过程中传递的逻辑 ... 
-    if(imagePath !== "" || removebgOfImagePath !== "" || batchFolderPath !== ""){
+    if(imagePath !== "" || batchFolderPath !== ""){
       setProgress("Generating Pritial Content...");
+
+      //开启随机种子的能力
+      //TODO: 后期需要矫正逻辑
+      const seed_enabled = true;
 
       if (!batchMode) {
         window.electron.send(commands.GENERATIVE_PARTIAL_CONTENT, {
-          scaleFactor,
+          // scaleFactor,
           imagePath: removebgOfImagePath.length > 0 ? removebgOfImagePath : imagePath,
           outputPath,
-          model,
-          gpuId: gpuId.length === 0 ? null : gpuId,
+          prompt,
+          negativePrompt,
+          seed_enabled,
+          // model,
+          // gpuId: gpuId.length === 0 ? null : gpuId,
           saveImageAs,
-          scale,
+          // scale,
         });
         logit("📢 GENERATIVE Partial Content Done!");
       } else {
-        logit("📢 Folders' generative partial content is not currently supported ");
+        logit("📢 暂不支持对目录批处理局部内容生成 ");
       }
     }
     else {
