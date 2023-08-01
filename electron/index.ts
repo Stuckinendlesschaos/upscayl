@@ -739,7 +739,7 @@ ipcMain.on(commands.GENERATIVE_IMAGE_BACKGROUND, async (event, payload) => {
   const fileName = parse(fullfileName).name;
   const fileExt = parse(fullfileName).ext;
   const imgDate = await obtainGenerativeImage(fullfileName,prompt,negativeprompt,randomSeed);
-  const outFilePath = join(outputPath, `${fileName}_${new Date().getTime()}`);
+  const outFilePath = join(outputPath, `${fileName}_${new Date().getTime()}${fileExt}`);
   await downloadFile(outFilePath, imgDate);
   mainWindow.webContents.send(commands.GENERATIVE_IMAGE_BACKGROUND_DONE, outFilePath);
 });

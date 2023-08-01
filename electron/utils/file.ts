@@ -77,7 +77,7 @@ export const obtainGenerativeImage = (imagePath: string,prompt: string,negativeP
           url: 'https://beta-sdk.photoroom.com/v1/instant-backgrounds',
           responseType: 'arraybuffer',
           headers: {
-            'x-api-key': '57a4c1539f100447a234ad82cc061aa9068dbe35',
+            'x-api-key': '5c601eae7aa82665f6ea77a83992ba6dacd7d514',
             Accept: '*/*',
             Host: 'beta-sdk.photoroom.com',
             Connection: 'keep-alive',

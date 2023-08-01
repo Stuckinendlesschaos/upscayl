@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import commands from "../../electron/commands";
 import { ReactCompareSlider } from "react-compare-slider";
-import Header from "../components/basic/Header";
-import Footer from "../components/basic/Footer";
-import ProgressBar from "../components/basic/ProgressBar";
+import Header from "../components/block/Header";
+import Footer from "../components/block/Footer";
+import ProgressBar from "../components/block/ProgressBar";
 import RightPaneInfo from "../components/display/RightPaneInfo";
 import ImageOptions from "../components/display/ImageOptions";
 import PromptOptions from "../components/display/PromptOptions";
@@ -105,7 +105,8 @@ const Home = () => {
     window.electron.on(commands.GENERATIVE_IMAGE_BACKGROUND_DONE, (_, data: string) => {
       setProgress("");
       setGenerativeImagePath(data);
-      setOutputPath(data + "_generativeBG");
+      // 创建新的文件夹存放
+      // setOutputPath(data + "_generativeBG");
       // addToLog(data);
     });
 
@@ -418,6 +419,8 @@ const Home = () => {
   const handlePaste = (e) => {
     resetImagePaths();
     e.preventDefault();
+
+    console.log("e.clipboardData: ",e.clipboardData);
 
     const type = e.clipboardData.items[0].type;
     const filePath = e.clipboardData.files[0].path;
