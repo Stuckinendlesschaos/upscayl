@@ -29,8 +29,6 @@ const PromptOptions = ({
     promptMode = tempPromptMode;
     setPromptMode = tempSetPromptMode;
     
-    typeofInput = "custom";
-
     useEffect(() => {
         // if (!localStorage.getItem("zoomAmount")) {
         //   localStorage.setItem("zoomAmount", zoomAmount);
@@ -41,13 +39,14 @@ const PromptOptions = ({
 
     //处理Concept响应的函数
     const handleConceptChange = (e) => {
-        setConcept(e.target.value);
-        localStorage.setItem("concept", e.target.value);
+      setConcept(e.target.value);
+      localStorage.setItem("concept", e.target.value);
     };
 
     // 处理TypeofInput响应的函数
     const handleTypeOfInputChange = (value: string) => {
       typeofInput = value;
+      localStorage.setItem("typeofInput", value);
     }
 
 

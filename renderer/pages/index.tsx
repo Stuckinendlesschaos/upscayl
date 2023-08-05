@@ -42,7 +42,7 @@ const Home = () => {
   const [segaConceptEffect1, setSegaConceptEffect1] = useState(false);
   const [segaConceptEffect2, setSegaConceptEffect2] = useState(false);
   const [concept, setConcept] = useState("");
-  const [typeofInput, setTypeofInput] = useState("");
+  const [typeofInput, setTypeofInput] = useState("custom");
   const [batchFolderPath, setBatchFolderPath] = useState("");
   const [rmbgBatchFolderPath, setRmbgBatchFolderPath] = useState("");
   const [upscaledBatchFolderPath, setUpscaledBatchFolderPath] = useState("");
@@ -566,10 +566,12 @@ const Home = () => {
 
     // 局部生成的词不接受','分隔符的输入，这与背景生成有很大的不同
     if(concept.indexOf(',') < 0 && (segaConcept1 === "" || segaConcept2 === "")){
-      if(segaConcept1 === "")
-        setSEGAConcept1(concept)
+      if(segaConcept1 === ""){
+        //局部生成的一组参数赋值
+        setSEGAConcept1(concept);
+      }
       else 
-        setSEGAConcept2(concept)
+        setSEGAConcept2(concept);
     }
     
   };
