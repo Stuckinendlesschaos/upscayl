@@ -11,6 +11,7 @@ const PromptOptions = ({
   concept,
   typeofInput,
   setPromptMode,
+  setTypeofInput,
   setConcept,
   addConcept,
   removeConcept,
@@ -45,7 +46,7 @@ const PromptOptions = ({
 
     // 处理TypeofInput响应的函数
     const handleTypeOfInputChange = (value: string) => {
-      typeofInput = value;
+      setTypeofInput(value);
       localStorage.setItem("typeofInput", value);
     }
 

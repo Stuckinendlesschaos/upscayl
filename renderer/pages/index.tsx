@@ -569,9 +569,15 @@ const Home = () => {
       if(segaConcept1 === ""){
         //局部生成的一组参数赋值
         setSEGAConcept1(concept);
+        setClassifiedType1(typeofInput);
+        // AddConcept为false
+        setSegaConceptEffect1(false);
       }
-      else 
+      else{ 
         setSEGAConcept2(concept);
+        setClassifiedType2(typeofInput);
+        setSegaConceptEffect2(false);
+      }
     }
     
   };
@@ -585,10 +591,18 @@ const Home = () => {
 
      // 局部生成的词不接受','分隔符的输入，这与背景生成有很大的不同
      if(concept.indexOf(',') < 0 && (segaConcept1 === "" || segaConcept2 === "")){
-      if(segaConcept1 === "")
-        setSEGAConcept1(concept)
-      else
-        setSEGAConcept2(concept)
+      if(segaConcept1 === ""){
+        //局部生成的一组参数赋值
+        setSEGAConcept1(concept);
+        setClassifiedType1(typeofInput);
+        // AddConcept为true
+        setSegaConceptEffect1(true);
+      }
+      else{
+        setSEGAConcept2(concept);
+        setClassifiedType2(typeofInput);
+        setSegaConceptEffect1(true);
+      }
     }
   };
 
