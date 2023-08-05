@@ -32,8 +32,15 @@ const Home = () => {
   const [version, setVersion] = useState("");
   const [batchMode, setBatchMode] = useAtom(batchModeAtom);
   const [promptMode, setPromptMode] = useAtom(promptModeAtom);
-  const [prompt,setPrompt] = useState("");
-  const [negativePrompt,setNegativePrompt] = useState("");
+  const [prompt, setPrompt] = useState("");
+  const [negativePrompt, setNegativePrompt] = useState("");
+  const [seedSwitch, setRandomSeedSwitch] = useState(false);
+  const [segaConcept1, setSEGAConcept1] = useState("");
+  const [segaConcept2, setSEGAConcept2] = useState("");
+  const [classifiedType1, setClassifiedType1] = useState("");
+  const [classifiedType2, setClassifiedType2] = useState("");
+  const [segaConceptEffect1, setSegaConceptEffect1] = useState(false);
+  const [segaConceptEffect2, setSegaConceptEffect2] = useState(false);
   const [concept, setConcept] = useState("");
   const [typeofInput, setTypeofInput] = useState("");
   const [batchFolderPath, setBatchFolderPath] = useState("");
@@ -553,11 +560,18 @@ const Home = () => {
  const addConcept = () => {
     logit("📢 Add concept to generate");
 
-    //add concept的逻辑
+    // add concept的逻辑
     setPrompt(concept);
     localStorage.setItem("prompt", prompt);
-    
 
+    // 局部生成的词不接受','分隔符的输入，这与背景生成有很大的不同
+    if(concept.indexOf(',') < 0 && (segaConcept1 === "" || segaConcept2 === "")){
+      if(segaConcept1 === "")
+        setSEGAConcept1(concept)
+      else 
+        setSEGAConcept2(concept)
+    }
+    
   };
 
   const removeConcept = () => {
@@ -565,7 +579,15 @@ const Home = () => {
 
     //remove concept的逻辑
     setNegativePrompt(concept);
-    localStorage.setItem("prompt", prompt);
+    localStorage.setItem("negativePrompt", negativePrompt);
+
+     // 局部生成的词不接受','分隔符的输入，这与背景生成有很大的不同
+     if(concept.indexOf(',') < 0 && (segaConcept1 === "" || segaConcept2 === "")){
+      if(segaConcept1 === "")
+        setSEGAConcept1(concept)
+      else
+        setSEGAConcept2(concept)
+    }
   };
 
   const setRandomizeSeed = () => {
@@ -613,7 +635,7 @@ const Home = () => {
 
       //开启随机种子的能力
       //TODO: 后期需要矫正逻辑
-      const seed_enabled = true;
+      const seedEnabled = true;
 
       if (!batchMode) {
         window.electron.send(commands.GENERATIVE_PARTIAL_CONTENT, {
@@ -622,7 +644,7 @@ const Home = () => {
           outputPath,
           prompt,
           negativePrompt,
-          seed_enabled,
+          seedEnabled,
           // model,
           // gpuId: gpuId.length === 0 ? null : gpuId,
           saveImageAs,
@@ -743,6 +765,20 @@ const Home = () => {
             imagePath={imagePath}
             outputPath={outputPath}
             dimensions={dimensions}
+            setRandomSeedSwitch={setRandomSeedSwitch}
+            seedSwitch={seedSwitch}
+            setSEGAConcept1={setSEGAConcept1}
+            setSEGAConcept2={setSEGAConcept2}
+            segaConcept1={segaConcept1}
+            segaConcept2={segaConcept2}
+            setClassifiedType1={setClassifiedType1}
+            setClassifiedType2={setClassifiedType2}
+            classifiedType1={classifiedType1}
+            classifiedType2={classifiedType2}
+            setSegaConceptEffect1={setSegaConceptEffect1}
+            setSegaConceptEffect2={setSegaConceptEffect2}
+            segaConceptEffect1={segaConceptEffect1}
+            segaConceptEffect2={segaConceptEffect2}
           />
         )}
         {selectedTab === 2 && (

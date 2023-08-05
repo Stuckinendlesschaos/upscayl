@@ -224,7 +224,7 @@ function LeftPaneImageSteps({
             />
             <p
               className="cursor-pointer text-sm"
-              onClick={(e) => {
+              onClick={() => {
                 setDoubleUpscayl(!doubleUpscayl);
               }}>
               双倍超分

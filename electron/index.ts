@@ -750,7 +750,7 @@ ipcMain.on(commands.GENERATIVE_IMAGE_BACKGROUND, async (event, payload) => {
 //    const fullfileName = payload.imagePath;
 //    const prompt = payload.prompt;
 //    const negativeprompt = payload.negativePrompt;
-//    const switch_seed = payload.seed_enabled;
+//    const switch_seed = payload.seedEnabled;
 //    // GET THE OUTPUT DIRECTORY
 //    const outputPath = payload.outputPath;
 //    const fileName = parse(fullfileName).name;
