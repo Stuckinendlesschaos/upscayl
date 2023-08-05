@@ -348,7 +348,7 @@ ipcMain.on(commands.OPEN_FOLDER, async (event, payload) => {
 //------------------------Stop Command-----------------------------//
 ipcMain.on(commands.STOP, async (event, payload) => {
   stopped = true;
-
+  //杀死所有的子进程
   childProcesses.forEach((child) => {
     logit("📢 Stopping Upscaling Process", child.process.pid);
     child.kill();
@@ -745,18 +745,23 @@ ipcMain.on(commands.GENERATIVE_IMAGE_BACKGROUND, async (event, payload) => {
 });
 
 //------------------------ GENERATIVE Partial Content Of Image -----------------------------//
-// ipcMain.on(commands.GENERATIVE_PARTIAL_CONTENT, async (event, payload) => {
+ipcMain.on(commands.GENERATIVE_PARTIAL_CONTENT, async (event, payload) => {
 //    // COPY IMAGE TO TMP FOLDER
-//    const fullfileName = payload.imagePath;
-//    const prompt = payload.prompt;
-//    const negativeprompt = payload.negativePrompt;
-//    const switch_seed = payload.seedEnabled;
-//    // GET THE OUTPUT DIRECTORY
-//    const outputPath = payload.outputPath;
-//    const fileName = parse(fullfileName).name;
-//    const fileExt = parse(fullfileName).ext;
-//    await obtainPartialContentOnImage();
-// });
+   const fullfileName = payload.imagePath;
+   const fileName = parse(fullfileName).name;
+   const fileExt = parse(fullfileName).ext;
+   const outputPath = payload.outputPath;
+   const switchSeed = payload.seedSwitch;
+   const TypeofSegaConcept1 = payload.classifiedType1;
+   const segaConcept1 = payload.segaConcept1;
+   const removeConcept1 = payload.segaConceptEffect1;
+   console.log("随机种子开关",switchSeed)
+   console.log(TypeofSegaConcept1,segaConcept1,removeConcept1);
+   const TypeofSegaConcept2 = payload.classifiedType2;
+   const segaConcept2 = payload.segaConcept2;
+   const removeConcept2 = payload.segaConceptEffect2;
+   console.log(TypeofSegaConcept2,segaConcept2,removeConcept2);
+});
 
 //------------------------Video Upscayl-----------------------------//
 // ipcMain.on(commands.UPSCAYL_VIDEO, async (event, payload) => {

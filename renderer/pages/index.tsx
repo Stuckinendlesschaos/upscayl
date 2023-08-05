@@ -289,12 +289,15 @@ const Home = () => {
 
     setVideoPath("");
     setUpscaledVideoPath("");
+
+    resetGenerativeParameters();
   };
 
-  // const resetSelectedComponentStatus = () => {
-  //   logit("退出窗口APP总是批处理关闭");
-  //   setBatchMode(false);
-  // }
+  const resetGenerativeParameters = () => {
+    //reset 生成式的参数内容
+    resetGenerateBackground();
+    resetGeneratePartialContent();
+  }
 
   // HANDLERS
   const handleMouseMove = useCallback((e: any) => {
@@ -631,6 +634,7 @@ const Home = () => {
           saveImageAs,
         });
 
+        logit("📢 GENERATIVE Background Progress Done!");
       } else {
         logit("📢 暂不支持对目录批处理背景生成 ");
       }
@@ -646,26 +650,25 @@ const Home = () => {
     logit("📢 Generating Patrtial Content For Image");
 
     //在处理过程中传递的逻辑 ... 
-    if(imagePath !== "" || batchFolderPath !== ""){
+    if(imagePath !== "" && ( segaConcept1 !== "" || segaConcept2 !== "")){
       setProgress("Generating Pritial Content...");
 
-      //开启随机种子的能力
-      //TODO: 后期需要矫正逻辑
-      const seedEnabled = true;
 
       if (!batchMode) {
         window.electron.send(commands.GENERATIVE_PARTIAL_CONTENT, {
           // scaleFactor,
           imagePath: removebgOfImagePath.length > 0 ? removebgOfImagePath : imagePath,
           outputPath,
-          prompt,
-          negativePrompt,
-          seedEnabled,
-          // model,
-          // gpuId: gpuId.length === 0 ? null : gpuId,
+          classifiedType1,
+          segaConcept1,
+          segaConceptEffect1,
+          classifiedType2,
+          segaConcept2,
+          segaConceptEffect2,
+          seedSwitch,
           saveImageAs,
-          // scale,
         });
+
         logit("📢 GENERATIVE Partial Content Done!");
       } else {
         logit("📢 暂不支持对目录批处理局部内容生成 ");
@@ -677,10 +680,27 @@ const Home = () => {
     }
   }
 
+  
+  //reset 生成背景内容
+  const resetGenerateBackground = () => {
+    setPrompt("");
+    setNegativePrompt("");
+  }
+
+  //reset 局部生成内容
+  const resetGeneratePartialContent = () => {
+    setClassifiedType1("custom")
+    setSEGAConcept1("")
+    setSegaConceptEffect1(false)
+    setClassifiedType2("custom")
+    setSEGAConcept2("")
+    setSegaConceptEffect2(false)
+  }
+
   const stopHandler = () => {
     window.electron.send(commands.STOP);
+    setProgress("");
     logit("📢 Stopping Upscayl");
-    resetImagePaths();
   };
 
   const formatPath = (path) => {
