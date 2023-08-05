@@ -563,7 +563,7 @@ const Home = () => {
  const addConcept = () => {
     logit("📢 Add concept to generate");
 
-    // add concept的逻辑
+    // 背景生成的逻辑
     setPrompt(concept);
     localStorage.setItem("prompt", prompt);
 
@@ -588,7 +588,7 @@ const Home = () => {
   const removeConcept = () => {
     logit("📢 Remove concept to generate");
 
-    //remove concept的逻辑
+    //背景生成的逻辑
     setNegativePrompt(concept);
     localStorage.setItem("negativePrompt", negativePrompt);
 
@@ -604,7 +604,7 @@ const Home = () => {
       else{
         setSEGAConcept2(concept);
         setClassifiedType2(typeofInput);
-        setSegaConceptEffect1(true);
+        setSegaConceptEffect2(true);
       }
     }
   };
@@ -964,7 +964,6 @@ const Home = () => {
                   promptMode={promptMode}
                   concept={concept}
                   typeofInput={typeofInput}
-                  // addConceptEvent={addConceptEvent}
                   setPromptMode={setPromptMode}
                   setConcept={setConcept}
                   setTypeofInput={setTypeofInput}

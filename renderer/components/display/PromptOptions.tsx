@@ -9,7 +9,6 @@ import { UpOutlined, DownOutlined } from '@ant-design/icons';
 const PromptOptions = ({
   promptMode,
   concept,
-  typeofInput,
   setPromptMode,
   setTypeofInput,
   setConcept,

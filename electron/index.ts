@@ -755,12 +755,9 @@ ipcMain.on(commands.GENERATIVE_PARTIAL_CONTENT, async (event, payload) => {
    const TypeofSegaConcept1 = payload.classifiedType1;
    const segaConcept1 = payload.segaConcept1;
    const removeConcept1 = payload.segaConceptEffect1;
-   console.log("随机种子开关",switchSeed)
-   console.log(TypeofSegaConcept1,segaConcept1,removeConcept1);
    const TypeofSegaConcept2 = payload.classifiedType2;
    const segaConcept2 = payload.segaConcept2;
    const removeConcept2 = payload.segaConceptEffect2;
-   console.log(TypeofSegaConcept2,segaConcept2,removeConcept2);
 });
 
 //------------------------Video Upscayl-----------------------------//
