@@ -23,6 +23,7 @@ const Home = () => {
   const [upscaledImagePath, setUpscaledImagePath] = useState("");
   const [removebgOfImagePath,setRemoveBgOfImagePath] = useState("");   
   const [generativeImagePath,setGenerativeImagePath] = useState("");
+  const [refactoredImagePath ,setRefactoringImagePath] = useState("");
   const [remove] = useState("");                  
   const [outputPath, setOutputPath] = useState("");
   const [scaleFactor] = useState(4);
@@ -116,6 +117,11 @@ const Home = () => {
       // setOutputPath(data + "_generativeBG");
       // addToLog(data);
     });
+
+    window.electron.on(commands.GENERATIVE_PARTIAL_CONTENT_DONE, (_, data: string) => {
+      setProgress("");
+      setRefactoringImagePath(data);
+    })
 
     // UPSCAYL PROGRESS
     window.electron.on(commands.UPSCAYL_PROGRESS, (_, data: string) => {
@@ -1066,6 +1072,74 @@ const Home = () => {
                     </p>
                     <img
                       src={"file://" + generativeImagePath}
+                      alt="After"
+                      style={{
+                        objectFit: "contain",
+                        backgroundPosition: "0% 0%",
+                        transformOrigin: backgroundPosition,
+                      }}
+                      onMouseMove={handleMouseMove}
+                      className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
+                    />
+                  </>
+                }
+                className="group h-screen"
+              />
+            </>
+          )}
+
+        {/* COMPARISON SLIDER FOR ORIGINAL AND GENERATIVE PARTIAL CONTENT OF IMAGE*/}
+        {!batchMode &&
+          !isVideo &&
+          imagePath.length > 0 &&
+          refactoredImagePath.length > 0 && (
+            <>
+              <ImageOptions
+                zoomAmount={zoomAmount}
+                setZoomAmount={setZoomAmount}
+                resetImagePaths={resetImagePaths}
+              />
+               <PromptOptions
+                  promptMode={promptMode}
+                  concept={concept}
+                  typeofInput={typeofInput}
+                  setPromptMode={setPromptMode}
+                  setConcept={setConcept}
+                  setTypeofInput={setTypeofInput}
+                  addConcept={addConcept}
+                  removeConcept={removeConcept}
+                  hideZoomOptions={true}
+              />
+              <ReactCompareSlider
+                itemOne={
+                  <>
+                    <p className="absolute bottom-1 left-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
+                      Before
+                    </p>
+
+                    <img
+                      src={
+                        "file://" + 
+                        `${generativeImagePath ? generativeImagePath : (removebgOfImagePath ? removebgOfImagePath : imagePath)}`
+                      }
+                      alt="Before"
+                      onMouseMove={handleMouseMove}
+                      style={{
+                        objectFit: "contain",
+                        backgroundPosition: "0% 0%",
+                        transformOrigin: backgroundPosition,
+                      }}
+                      className={`h-full w-full bg-[#1d1c23] transition-transform group-hover:scale-[${zoomAmount}]`}
+                    />
+                  </>
+                }
+                itemTwo={
+                  <>
+                    <p className="absolute bottom-1 right-1 rounded-md bg-black p-1 text-sm font-medium text-white opacity-30">
+                      After
+                    </p>
+                    <img
+                      src={"file://" + refactoredImagePath}
                       alt="After"
                       style={{
                         objectFit: "contain",

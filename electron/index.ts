@@ -14,7 +14,7 @@ import { format } from "url";
 import fs from "fs";
 
 import { execPath, modelsPath } from "./binaries";
-import { getFileList, getRemoveBgImgData, obtainGenerativeImage, downloadFile} from './utils/file'
+import { getFileList, getRemoveBgImgData, obtainGenerativeImage, obtainRefactoringImage, downloadFile} from './utils/file'
 
 // Packages
 import {
@@ -752,12 +752,26 @@ ipcMain.on(commands.GENERATIVE_PARTIAL_CONTENT, async (event, payload) => {
    const fileExt = parse(fullfileName).ext;
    const outputPath = payload.outputPath;
    const switchSeed = payload.seedSwitch;
-   const TypeofSegaConcept1 = payload.classifiedType1;
+   const typeofSegaConcept1 = payload.classifiedType1;
    const segaConcept1 = payload.segaConcept1;
    const removeConcept1 = payload.segaConceptEffect1;
-   const TypeofSegaConcept2 = payload.classifiedType2;
+   const typeofSegaConcept2 = payload.classifiedType2;
    const segaConcept2 = payload.segaConcept2;
    const removeConcept2 = payload.segaConceptEffect2;
+   const sega_val0: string[] = [];
+   const sega_val1: string[] = [];
+   if(segaConcept1 !== ""){
+      sega_val0.push(typeofSegaConcept1, segaConcept1, removeConcept1);
+   }
+   if(segaConcept2 !== ""){
+      sega_val1.push(typeofSegaConcept2, segaConcept2, removeConcept2);
+   }
+
+   const imgDate = await obtainRefactoringImage(fullfileName,sega_val0,sega_val1,switchSeed);
+   const outFilePath = join(outputPath, `${fileName}_${new Date().getTime()}${fileExt}`);
+   await downloadFile(outFilePath, imgDate);
+   mainWindow.webContents.send(commands.GENERATIVE_PARTIAL_CONTENT_DONE, outFilePath);
+
 });
 
 //------------------------Video Upscayl-----------------------------//

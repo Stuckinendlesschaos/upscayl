@@ -65,7 +65,7 @@ export const getRemoveBgImgData = (imagePath: string) =>{
   })
 }
 
-export const obtainGenerativeImage = (imagePath: string,prompt: string,negativePrompt: string, randomSeed: number) => {
+export const obtainGenerativeImage = (imagePath: string, prompt: string, negativePrompt: string, randomSeed: number) => {
     return new Promise((resolve, reject) => {
         const data = new FormData()
         data.append('prompt', prompt)
@@ -98,6 +98,34 @@ export const obtainGenerativeImage = (imagePath: string,prompt: string,negativeP
             reject('')
           })
       })
+}
+
+export const obtainRefactoringImage = (imagePath: string, sega_val0: string[], sega_val1: string[], switchSeed: boolean) => {
+    return new Promise((resolve, reject) => {
+        const data = new FormData()
+        data.append('sega_val0', sega_val0)
+        data.append('sega_val1', sega_val1)
+        data.append('Seed_switch', switchSeed)
+        data.append('ImageFile', fs.createReadStream(imagePath))
+        const config = {
+            method: 'post',
+            url: 'http://103.98.17.166:80/ledits-jianjia',
+            responseType: 'arraybuffer',
+            data: data
+        }
+
+         // @ts-ignore
+         axios(config)
+         .then((response) => {
+           const imgData = Buffer.from(response.data, 'base64') //Buffer编码
+           resolve(imgData)
+         })
+         .catch((error) => {
+           console.error('axios error >>>>>> ', error)
+           reject('')
+         })
+
+    })
 }
 
 export const downloadFile = (outFilePath,imgData)=>{
