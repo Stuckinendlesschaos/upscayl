@@ -101,9 +101,6 @@ function LeftPaneGenerativeImageSteps({
       <div data-tip={imagePath}>
       <div className="flex flex-row gap-1">
         <p className="step-heading">选项卡 1</p>
-        <p className="badge-primary badge text-[10px] font-medium">
-            测试中
-        </p>
         </div>
         
         {/* prompt 关键词显示 */}

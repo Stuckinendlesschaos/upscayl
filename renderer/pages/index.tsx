@@ -895,6 +895,8 @@ const Home = () => {
           !isVideo &&
           removebgOfImagePath.length === 0 &&
           upscaledImagePath.length === 0 &&
+          generativeImagePath.length === 0 &&
+          refactoredImagePath.length === 0 &&
           imagePath.length > 0 && (
             <>
               <ImageOptions
@@ -1058,7 +1060,7 @@ const Home = () => {
                     <img
                       src={
                         "file://" + 
-                        `${removebgOfImagePath ? removebgOfImagePath : imagePath}`
+                        `${removebgOfImagePath}`
                       }
                       alt="Before"
                       onMouseMove={handleMouseMove}
@@ -1093,12 +1095,13 @@ const Home = () => {
               />
             </>
           )}
-
-        {/* COMPARISON SLIDER FOR ORIGINAL AND GENERATIVE PARTIAL CONTENT OF IMAGE*/}
+          
+        {/* COMPARISON SLIDER FOR ORIGINAL AND GENERATIVE PARTIAL CONTENT OF IMAGE */}
         {!batchMode &&
           !isVideo &&
           imagePath.length > 0 &&
-          refactoredImagePath.length > 0 && (
+          refactoredImagePath.length > 0 &&
+          upscaledImagePath.length === 0 && (
             <>
               <ImageOptions
                 zoomAmount={zoomAmount}

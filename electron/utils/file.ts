@@ -103,23 +103,18 @@ export const obtainGenerativeImage = (imagePath: string, prompt: string, negativ
 export const obtainRefactoringImage = (imagePath: string, sega_val0: string[], sega_val1: string[], switchSeed: boolean) => {
     return new Promise((resolve, reject) => {
         const data = new FormData()
-        // data.append('sega_val0', sega_val0)
-        // data.append('sega_val1', sega_val1)
-        // data.append('Seed_switch',switchSeed)
-        
-        // 参数示例
-        data.append('sega_val0', "['custom','lemons',true]")//sega_val0
-        data.append('sega_val1', "['custom','apples',false]") //sega_val1
-        data.append('Seed_switch','false' )//switchSeed
-
+        data.append('sega_val0', sega_val0.join())
+        data.append('sega_val1', sega_val1.join())
+        data.append('Seed_switch', String(switchSeed))
         data.append('ImageFile', fs.createReadStream(imagePath))
 
         const config = {
             method: 'post',
             url: 'http://103.98.17.166:80/ledits-jianjia',
             headers: { 
-                'Accept': '*/*', 
-                'Connection': 'keep-alive', 
+                Accept: '*/*', 
+                Host: '103.98.17.166:80',
+                Connection: 'keep-alive', 
                 'Content-Type': 'multipart/form-data; boundary=--------------------------137783359278318920604824', 
              },
             data: data
@@ -128,9 +123,7 @@ export const obtainRefactoringImage = (imagePath: string, sega_val0: string[], s
          // @ts-ignore
          axios(config)
          .then((response) => {
-            console.log('response.data ', response.data);
            const imgData = Buffer.from(response.data, 'base64') //Buffer编码
-           
            resolve(imgData)
          })
          .catch((error) => {
