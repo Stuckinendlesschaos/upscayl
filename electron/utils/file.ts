@@ -4,7 +4,7 @@ import axios from 'axios'
 import FormData from 'form-data'
 
 const allowedFileTypes = [".png", ".jpg", ".jpeg", ".webp"];
-const BATCH_MAX = 10 // 批处理最大限制个数
+const BATCH_MAX = 50 // 批处理最大限制个数
 
 export const getFileList = folder => {
     return new Promise((resolve)=>{
@@ -15,7 +15,9 @@ export const getFileList = folder => {
             files.forEach((originName) => {
                 const name = path.parse(originName).name
                 const ext = path.parse(originName).ext
+                // 如果图片类型不包含在格式列表,不处理
                 if(!allowedFileTypes.includes(ext)) return
+                // 一次性批处理的上限，可商用处理逻辑
                 if(fileList.length > BATCH_MAX) return
                 //获取当前文件的绝对路径
                 const filePath = path.join(folder, originName);
