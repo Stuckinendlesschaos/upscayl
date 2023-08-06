@@ -144,8 +144,9 @@ function LeftPaneGenerativeImageSteps({
             <div className="mt-4 flex items-center gap-1">
               {/* 给一个叉号用于清除错误 */}
               <input
-                  type="checkbox"
-                  className="checkbox"
+                  type="radio"
+                  className="radio"
+                  style={{width:11,height:11}}
                   onChange={(e) => {
                     if (e.target.checked) {
                       setSEGAConcept1("")
@@ -163,8 +164,9 @@ function LeftPaneGenerativeImageSteps({
            <div className="mt-4 flex items-center gap-1">
             {/* 给一个叉号用于清除错误 */}
             <input
-                type="checkbox"
-                className="checkbox"
+                type="radio"
+                className="radio"
+                style={{width:11,height:11}}
                 onChange={(e) => {
                   if (e.target.checked) {
                     setSEGAConcept2("")
