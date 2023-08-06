@@ -38,7 +38,7 @@ export const getRemoveBgImgData = (imagePath: string) =>{
     data.append('image', fs.createReadStream(imagePath))
     const config = {
         method: 'post',
-        url: 'https://pixian.ai/api/v1/remove-background',
+        url: 'https://api.pixian.ai/api/v2/remove-background',
         responseType: 'arraybuffer',
         headers: {
         Authorization:
