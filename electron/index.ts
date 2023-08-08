@@ -522,6 +522,7 @@ ipcMain.on(commands.UPSCAYL, async (event, payload) => {
     logit("📢 Already upscayled at: ", outFile);
     mainWindow.webContents.send(commands.UPSCAYL_DONE, outFile);
   } else {
+    //TODO: Python化
     const upscayl = spawnUpscayl(
       "realesrgan",
       getSingleImageArguments(

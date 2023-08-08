@@ -667,6 +667,7 @@ const Home = () => {
 
 
       if (!batchMode) {
+        console.log("GETGETGETEGET: ",segaConceptEffect1,segaConceptEffect2)
         window.electron.send(commands.GENERATIVE_PARTIAL_CONTENT, {
           // scaleFactor,
           imagePath: removebgOfImagePath.length > 0 ? removebgOfImagePath : imagePath,
@@ -697,6 +698,8 @@ const Home = () => {
   const resetGenerateBackground = () => {
     setPrompt("");
     setNegativePrompt("");
+    //重置路径
+    setGenerativeImagePath("");
   }
 
   //reset 局部生成内容
@@ -707,6 +710,8 @@ const Home = () => {
     setClassifiedType2("custom")
     setSEGAConcept2("")
     setSegaConceptEffect2(false)
+    //重置路径
+    setRefactoringImagePath("")
   }
 
   const stopHandler = () => {
