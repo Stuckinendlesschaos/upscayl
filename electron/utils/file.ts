@@ -37,22 +37,18 @@ export const getFileList = folder => {
 export const getRemoveBgImgData = (imagePath: string) =>{
   return new Promise((resolve,reject) => {
     const data = new FormData()
-    data.append('image', fs.createReadStream(imagePath))
+    data.append('ImageFile', fs.createReadStream(imagePath))
+    data.append('background-color','#00000000')
     const config = {
         method: 'post',
-        url: 'https://api.pixian.ai/api/v2/remove-background',
-        responseType: 'arraybuffer',
-        headers: {
-        Authorization:
-            'Basic cHhpNDR2cHJremNzZ3JmOjRuY3QybjB1N3VxbnQ5MWhhZzFhNGhybmRnMGU5N29xZDZxNnZoYmNqYXNhZGxzNDQ1b3M=',
-        Accept: '*/*',
-        Host: 'pixian.ai',
-        Connection: 'keep-alive',
-        'Content-Type':
-            'multipart/form-data; boundary=--------------------------770839930141001909509711',
-        // @ts-ignore
-        //   ...data.getHeaders(),
-        },
+        url: 'http://103.98.17.166:80/backgroundRemove-jianjia',
+        // responseType: 'base64',
+        headers: { 
+            Accept: '*/*', 
+            Host: '103.98.17.166:80',
+            Connection: 'keep-alive', 
+            'Content-Type': 'multipart/form-data; boundary=--------------------------137783359278318920604824', 
+         },
         data: data,
     }
     // @ts-ignore
@@ -73,20 +69,18 @@ export const obtainGenerativeImage = (imagePath: string, prompt: string, negativ
         data.append('prompt', prompt)
         data.append('negativePrompt', negativePrompt)
         data.append('seed', randomSeed)
-        data.append('imageFile', fs.createReadStream(imagePath))
+        data.append('ImageFile', fs.createReadStream(imagePath))
         const config = {
-          method: 'post',
-          url: 'https://beta-sdk.photoroom.com/v1/instant-backgrounds',
-          responseType: 'arraybuffer',
-          headers: {
-            'x-api-key': '5c601eae7aa82665f6ea77a83992ba6dacd7d514',
-            Accept: '*/*',
-            Host: 'beta-sdk.photoroom.com',
-            Connection: 'keep-alive',
-            'Content-Type':
-              'multipart/form-data; boundary=--------------------------770839930141001909509711'
-          },
-          data: data
+            method: 'post',
+            url: 'http://103.98.17.166:80/backgroundEdits-jianjia',
+            // responseType: 'base64',
+            headers: { 
+                Accept: '*/*', 
+                Host: '103.98.17.166:80',
+                Connection: 'keep-alive', 
+                'Content-Type': 'multipart/form-data; boundary=--------------------------137783359278318920604824', 
+             },
+            data: data,
         }
 
         // @ts-ignore
