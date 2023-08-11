@@ -1037,7 +1037,8 @@ const Home = () => {
         {!batchMode &&
           !isVideo &&
           removebgOfImagePath.length > 0 &&
-          generativeImagePath.length > 0 && (
+          generativeImagePath.length > 0 &&
+          refactoredImagePath.length === 0 && (
             <>
               <ImageOptions
                 zoomAmount={zoomAmount}
